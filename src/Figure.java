@@ -11,7 +11,9 @@ import java.util.Random;
 public class Figure {
     private final static int WIDTH;
     private final static int HEIGHT;
+    private final static Random rnd;
     private Square[] squares;
+    private int type;
 
     /*
      * Template for figures:
@@ -35,6 +37,7 @@ public class Figure {
     static {
         WIDTH = 10;
         HEIGHT = 20;
+        rnd = new Random();
     }
 
     {
@@ -43,8 +46,7 @@ public class Figure {
     }
 
     public void generateFigure() {
-        Random rnd = new Random();
-        int type = rnd.nextInt(7);
+        type = rnd.nextInt(7);
         for (int i = 0; i < 4; ++i) {
             int x = (figures[type][i] & 1) + WIDTH / 2 - 1;
             int y = figures[type][i] / 2;
@@ -52,10 +54,10 @@ public class Figure {
         }
     }
 
-    private Square @NotNull [] squareArrayCopy(Square @NotNull [] arr) {
-        Square[] copy = new Square[arr.length];
-        for (int i = 0; i < arr.length; ++i) {
-            copy[i] = new Square(arr[i].getX(), arr[i].getY());
+    private Square @NotNull [] squareArrayCopy(Square @NotNull [] squares) {
+        Square[] copy = new Square[squares.length];
+        for (int i = 0; i < squares.length; ++i) {
+            copy[i] = new Square(squares[i].getX(), squares[i].getY());
         }
         return copy;
     }
@@ -77,13 +79,33 @@ public class Figure {
         Arrays.stream(squares).forEach(Square::moveRight);
     }
 
+    private void shiftI(Square[] squares) {
+        if (squares[1].getX() > squares[0].getX()) {
+            Arrays.stream(squares).forEach(Square::moveUp);
+        } else if (squares[1].getX() < squares[0].getX()) {
+            Arrays.stream(squares).forEach(Square::moveDown);
+        } else if (squares[1].getY() > squares[0].getY()) {
+            Arrays.stream(squares).forEach(Square::moveRight);
+        } else {
+            Arrays.stream(squares).forEach(Square::moveLeft);
+        }
+    }
+
     public Square[] rotateRight() {
+        // no need to rotate O
+        if (type == 2) {
+            return squares;
+        }
         Square[] rotatedSquares = squareArrayCopy(squares);
         for (int i = 0; i < 4; ++i) {
             int x = squares[i].getX() - squares[1].getX();
             int y = squares[i].getY() - squares[1].getY();
             rotatedSquares[i].setX(squares[1].getX() - y);
             rotatedSquares[i].setY(squares[1].getY() + x);
+        }
+        // shift I
+        if (type == 1) {
+            shiftI(rotatedSquares);
         }
         return rotatedSquares;
     }

@@ -15,14 +15,14 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
 
 
     PlayArea() {
-        SetupMainPanel();
-        SetupPlayPanel();
-        SetupBackgroundPanel();
+        setupMainPanel();
+        setupPlayPanel();
+        setupBackgroundPanel();
         this.add(field);
         this.add(backgroundPanel);
     }
 
-    private void SetupMainPanel() {
+    private void setupMainPanel() {
         setTitle("Tetris");
         setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource("tetris.png"))).getImage());
         setSize(335, 480);
@@ -40,18 +40,18 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
         });
     }
 
-    private void SetupPlayPanel() {
+    private void setupPlayPanel() {
         field = new Field();
         field.setLocation(20, 20);
     }
 
-    private void SetupBackgroundPanel() {
+    private void setupBackgroundPanel() {
         backgroundPanel = new Panel();
         backgroundPanel.setBackground(new Color(253, 208, 59));
         backgroundPanel.setLayout(null);
-        SetupButtonPause();
-        SetupButtonResume();
-        SetupButtonExit();
+        setupPauseButton();
+        setupResumeButton();
+        setupExitButton();
         backgroundPanel.add(pauseButton);
         backgroundPanel.add(resumeButton);
         backgroundPanel.add(exitButton);
@@ -70,20 +70,20 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
         return button;
     }
 
-    private void SetupButtonPause() {
+    private void setupPauseButton() {
         pauseButton = SetupButton("Pause", new Color(128, 215, 84));
         pauseButton.setBounds(235, 345, 70, 30);
         pauseButton.addActionListener(this);
     }
 
-    private void SetupButtonResume() {
+    private void setupResumeButton() {
         resumeButton = SetupButton("Resume", new Color(128, 215, 84));
         resumeButton.setBounds(235, 345, 70, 30);
         resumeButton.setVisible(false);
         resumeButton.addActionListener(this);
     }
 
-    private void SetupButtonExit() {
+    private void setupExitButton() {
         exitButton = SetupButton("Exit", new Color(253, 58, 58, 255));
         exitButton.setBounds(235, 390, 70, 30);
         exitButton.addActionListener(this);
