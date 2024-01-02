@@ -1,15 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 
-public class Field extends JComponent implements KeyListener {
+public class Field extends JComponent implements ActionListener {
     private final static int SQUARE_SIZE;
     private final static int WIDTH;
     private final static int HEIGHT;
     private final static int TIMER_DURATION;
     private final int[][] field;
-    private final Figure curFigure;
+    private final Figure figure;
 
     static {
         SQUARE_SIZE = 20;
@@ -20,17 +21,76 @@ public class Field extends JComponent implements KeyListener {
 
     {
         field = new int[HEIGHT][WIDTH];
-        curFigure = new Figure(field);
+        figure = new Figure();
         Timer gameTimer = new Timer(TIMER_DURATION, e -> {
-            curFigure.moveDown();
+            moveDown();
             repaint();
         });
         gameTimer.start();
 
         setSize(WIDTH * SQUARE_SIZE + 2, HEIGHT * SQUARE_SIZE + 2);
-        addKeyListener(this);
-        setFocusable(true);
-        requestFocusInWindow();
+    }
+
+    private boolean isOutOfSpace(Square[] squares) {
+        return Arrays.stream(squares).anyMatch(
+                square -> square.getX() < 0 || square.getX() >= WIDTH || square.getY() >= HEIGHT ||
+                        field[square.getY()][square.getX()] != 0);
+    }
+
+    private void saveInField(Square[] squares) {
+        Arrays.stream(squares).forEach(square -> field[square.getY()][square.getX()] = 1);
+    }
+
+    private void clearLine(int id) {
+        for (int i = id; i > 0; --i) {
+            field[i] = field[i - 1];
+        }
+        field[0] = new int[WIDTH];
+    }
+
+    private void clearFullLines() {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (field[i][j] == 0) {
+                    break;
+                }
+                if (j + 1 == WIDTH) {
+                    clearLine(i);
+                }
+            }
+        }
+    }
+
+    public void moveLeft() {
+        figure.moveLeft();
+        if (isOutOfSpace(figure.getSquares())) {
+            figure.moveRight();
+        }
+    }
+
+
+    public void moveDown() {
+        figure.moveDown();
+        if (isOutOfSpace(figure.getSquares())) {
+            figure.moveUp();
+            saveInField(figure.getSquares());
+            figure.generateFigure();
+            clearFullLines();
+        }
+    }
+
+    public void moveRight() {
+        figure.moveRight();
+        if (isOutOfSpace(figure.getSquares())) {
+            figure.moveLeft();
+        }
+    }
+
+    public void rotateRight() {
+        Square[] rotatedSquares = figure.rotateRight();
+        if (!isOutOfSpace(rotatedSquares)) {
+            figure.setSquares(rotatedSquares);
+        }
     }
 
     @Override
@@ -40,7 +100,7 @@ public class Field extends JComponent implements KeyListener {
         g.setColor(Color.BLACK);
         g.drawRect(0, 0, WIDTH * SQUARE_SIZE, HEIGHT * SQUARE_SIZE);
 
-        curFigure.paint(g);
+        figure.paint(g);
         for (int i = 0; i < HEIGHT; ++i) {
             for (int j = 0; j < WIDTH; ++j) {
                 if (field[i][j] != 0) {
@@ -51,32 +111,7 @@ public class Field extends JComponent implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        switch (keyCode) {
-            case KeyEvent.VK_A -> {
-                curFigure.moveLeft();
-            }
-            case KeyEvent.VK_S -> {
-                curFigure.moveDown();
-            }
-            case KeyEvent.VK_D -> {
-                curFigure.moveRight();
-            }
-            case KeyEvent.VK_R -> {
-                curFigure.rotateRight();
-            }
-        }
-        repaint();
-    }
+    public void actionPerformed(ActionEvent e) {
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // empty body
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // empty body
     }
 }

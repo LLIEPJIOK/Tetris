@@ -1,15 +1,17 @@
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 
+@Getter
+@Setter
 public class Figure {
     private final static int WIDTH;
     private final static int HEIGHT;
-    private final static int SQUARE_SIZE;
-    private Square[] figure;
-    private final int[][] field;
+    private Square[] squares;
 
     /*
      * Template for figures:
@@ -33,25 +35,20 @@ public class Figure {
     static {
         WIDTH = 10;
         HEIGHT = 20;
-        SQUARE_SIZE = 20;
     }
 
     {
-        figure = new Square[4];
-        generate();
+        squares = new Square[4];
+        generateFigure();
     }
 
-    public Figure(int[][] field) {
-        this.field = field;
-    }
-
-    private void generate() {
+    public void generateFigure() {
         Random rnd = new Random();
         int type = rnd.nextInt(7);
         for (int i = 0; i < 4; ++i) {
             int x = (figures[type][i] & 1) + WIDTH / 2 - 1;
             int y = figures[type][i] / 2;
-            figure[i] = new Square(x, y);
+            squares[i] = new Square(x, y);
         }
     }
 
@@ -63,65 +60,36 @@ public class Figure {
         return copy;
     }
 
-    private boolean isOutOfSpace(Square[] figure) {
-        return Arrays.stream(figure).anyMatch(
-                square -> square.getX() < 0 || square.getX() >= WIDTH || square.getY() >= HEIGHT ||
-                        field[square.getY()][square.getX()] != 0);
-    }
-
-    private void saveInField() {
-        Arrays.stream(figure).forEach(square -> field[square.getY()][square.getX()] = 1);
-    }
-
     public void moveUp() {
-        Arrays.stream(figure).forEach(Square::moveUp);
+        Arrays.stream(squares).forEach(Square::moveUp);
     }
 
     public void moveLeft() {
-        for (Square square : figure) {
-            if (square.getX() <= 0 || field[square.getY()][square.getX() - 1] != 0) {
-                return;
-            }
-        }
-        Arrays.stream(figure).forEach(Square::moveLeft);
+        Arrays.stream(squares).forEach(Square::moveLeft);
     }
 
 
     public void moveDown() {
-        for (Square square : figure) {
-            if (square.getY() >= HEIGHT - 1 || field[square.getY() + 1][square.getX()] != 0) {
-                saveInField();
-                generate();
-                return;
-            }
-        }
-        Arrays.stream(figure).forEach(Square::moveDown);
+        Arrays.stream(squares).forEach(Square::moveDown);
     }
 
     public void moveRight() {
-        for (Square square : figure) {
-            if (square.getX() >= WIDTH - 1 || field[square.getY()][square.getX() + 1] != 0) {
-                return;
-            }
-        }
-        Arrays.stream(figure).forEach(Square::moveRight);
+        Arrays.stream(squares).forEach(Square::moveRight);
     }
 
-    public void rotateRight() {
-        Square[] rotatedFigure = squareArrayCopy(figure);
+    public Square[] rotateRight() {
+        Square[] rotatedSquares = squareArrayCopy(squares);
         for (int i = 0; i < 4; ++i) {
-            int x = figure[i].getX() - figure[1].getX();
-            int y = figure[i].getY() - figure[1].getY();
-            rotatedFigure[i].setX(figure[1].getX() - y);
-            rotatedFigure[i].setY(figure[1].getY() + x);
+            int x = squares[i].getX() - squares[1].getX();
+            int y = squares[i].getY() - squares[1].getY();
+            rotatedSquares[i].setX(squares[1].getX() - y);
+            rotatedSquares[i].setY(squares[1].getY() + x);
         }
-        if (!isOutOfSpace(rotatedFigure)) {
-            figure = rotatedFigure;
-        }
+        return rotatedSquares;
     }
 
     public void paint(Graphics g) {
-        Arrays.stream(figure)
+        Arrays.stream(squares)
               .forEach(square -> Painter.paintSquare(g, square.getX(), square.getY()));
     }
 }
