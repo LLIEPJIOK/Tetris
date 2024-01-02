@@ -9,6 +9,10 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
     private Field field;
     private Panel backgroundPanel;
 
+    private JLabel score;
+    private JLabel lines;
+    private JLabel linesLabel;
+    private JLabel scoreLabel;
     private JButton pauseButton;
     private JButton resumeButton;
     private JButton exitButton;
@@ -52,6 +56,14 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
         setupPauseButton();
         setupResumeButton();
         setupExitButton();
+        SetupTextScore();
+        SetupTextLines();
+        SetupScore();
+        SetupLines();
+        backgroundPanel.add(lines);
+        backgroundPanel.add(score);
+        backgroundPanel.add(linesLabel);
+        backgroundPanel.add(scoreLabel);
         backgroundPanel.add(pauseButton);
         backgroundPanel.add(resumeButton);
         backgroundPanel.add(exitButton);
@@ -88,6 +100,59 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
         exitButton.setBounds(235, 390, 70, 30);
         exitButton.addActionListener(this);
     }
+
+    private void SetupTextScore()
+    {
+        scoreLabel = new JLabel("Score");
+        Font font = new Font("Arial",  Font.PLAIN, 20);
+        scoreLabel.setFont(font);
+        scoreLabel.setForeground(new Color(0, 0, 0, 200));
+        scoreLabel.setBounds(240,200,60,25);
+        scoreLabel.setOpaque(true);
+        scoreLabel.setBackground(new Color(255, 164, 60));
+        Border border = new LineBorder(new Color(0, 0, 0, 200), 2, false);
+        scoreLabel.setBorder(border);
+    }
+
+
+    private void SetupTextLines()
+    {
+        linesLabel = new JLabel("Lines");
+        Font font = new Font("Arial",  Font.PLAIN, 20);
+        linesLabel.setFont(font);
+        linesLabel.setForeground(new Color(0, 0, 0, 200));
+        linesLabel.setBounds(243,270,53,25);
+        linesLabel.setOpaque(true);
+        linesLabel.setBackground(new Color(255, 164, 60));
+        Border border = new LineBorder(new Color(0, 0, 0, 200), 2, false);
+        linesLabel.setBorder(border);
+    }
+
+    private void SetupScore()
+    {
+        score = new JLabel("0");
+        Font font = new Font("Arial",  Font.PLAIN, 18);
+        score.setFont(font);
+        score.setForeground(new Color(0, 0, 0, 200));
+        score.setBounds(240,225,60,25);
+    }
+
+    private void SetupLines()
+    {
+        lines = new JLabel("0");
+        Font font = new Font("Arial",  Font.PLAIN, 18);
+        lines.setFont(font);
+        lines.setForeground(new Color(0, 0, 0, 200));
+        lines.setBounds(243,295,60,25);
+    }
+
+//    private void SetupTextScoreInt()
+//    {
+//        scoreLabel = new JLabel("Score:");
+//        Font font = new Font("Arial", Font.ITALIC | Font.BOLD, 16);
+//        scoreLabel.setFont(font);
+//        scoreLabel.setBounds(240,150,60,20);
+//    }
 
 
     @Override
