@@ -213,7 +213,10 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
             return;
         }
         if (e instanceof ScoreEvent scoreEvent) {
-            System.out.println(scoreEvent.getScore());
+            int curScore = Integer.parseInt(score.getText());
+            score.setText(Integer.toString(curScore + scoreEvent.getScore()));
+            int curLines = Integer.parseInt(lines.getText());
+            lines.setText(Integer.toString(curLines + scoreEvent.getLines()));
         }
     }
 }
