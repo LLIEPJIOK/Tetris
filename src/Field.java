@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Field extends JComponent {
     private final static int SQUARE_SIZE;
@@ -10,6 +13,7 @@ public class Field extends JComponent {
     private final int[][] field;
     private final Figure figure;
     private final Timer timer;
+    private final List<ActionListener> actionListeners;
 
     static {
         SQUARE_SIZE = 20;
@@ -21,13 +25,18 @@ public class Field extends JComponent {
     {
         field = new int[HEIGHT][WIDTH];
         figure = new Figure();
-         timer = new Timer(TIMER_DURATION, e -> {
+        timer = new Timer(TIMER_DURATION, e -> {
             moveDown();
             repaint();
         });
         timer.start();
+        actionListeners = new ArrayList<>();
 
         setSize(WIDTH * SQUARE_SIZE, HEIGHT * SQUARE_SIZE);
+    }
+
+    public void addActionListener(ActionListener listener) {
+        actionListeners.add(listener);
     }
 
     public void pauseGame() {
@@ -55,7 +64,15 @@ public class Field extends JComponent {
         field[0] = new int[WIDTH];
     }
 
+    private void notifyListeners(int lines) {
+        ScoreEvent scoreEvent = new ScoreEvent(this, lines);
+        for (ActionListener actionListener : actionListeners) {
+            actionListener.actionPerformed(scoreEvent);
+        }
+    }
+
     private void clearFullLines() {
+        int lines = 0;
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 if (field[i][j] == 0) {
@@ -63,8 +80,12 @@ public class Field extends JComponent {
                 }
                 if (j + 1 == WIDTH) {
                     clearLine(i);
+                    ++lines;
                 }
             }
+        }
+        if (lines != 0) {
+            notifyListeners(lines);
         }
     }
 
@@ -94,6 +115,13 @@ public class Field extends JComponent {
         figure.moveRight();
         if (isOutOfSpace(figure.getSquares())) {
             figure.moveLeft();
+        }
+    }
+
+    public void rotateLeft() {
+        Square[] rotatedSquares = figure.rotateLeft();
+        if (!isOutOfSpace(rotatedSquares)) {
+            figure.setSquares(rotatedSquares);
         }
     }
 

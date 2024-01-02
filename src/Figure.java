@@ -79,16 +79,19 @@ public class Figure {
         Arrays.stream(squares).forEach(Square::moveRight);
     }
 
-    private void shiftI(Square[] squares) {
-        if (squares[1].getX() > squares[0].getX()) {
-            Arrays.stream(squares).forEach(Square::moveUp);
-        } else if (squares[1].getX() < squares[0].getX()) {
-            Arrays.stream(squares).forEach(Square::moveDown);
-        } else if (squares[1].getY() > squares[0].getY()) {
-            Arrays.stream(squares).forEach(Square::moveRight);
-        } else {
-            Arrays.stream(squares).forEach(Square::moveLeft);
+    public Square[] rotateLeft() {
+        // no need to rotate O
+        if (type == 2) {
+            return squares;
         }
+        Square[] rotatedSquares = squareArrayCopy(squares);
+        for (int i = 0; i < 4; ++i) {
+            int x = squares[i].getX() - squares[1].getX();
+            int y = squares[i].getY() - squares[1].getY();
+            rotatedSquares[i].setX(squares[1].getX() + y);
+            rotatedSquares[i].setY(squares[1].getY() - x);
+        }
+        return rotatedSquares;
     }
 
     public Square[] rotateRight() {
@@ -102,10 +105,6 @@ public class Figure {
             int y = squares[i].getY() - squares[1].getY();
             rotatedSquares[i].setX(squares[1].getX() - y);
             rotatedSquares[i].setY(squares[1].getY() + x);
-        }
-        // shift I
-        if (type == 1) {
-            shiftI(rotatedSquares);
         }
         return rotatedSquares;
     }

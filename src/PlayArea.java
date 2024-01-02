@@ -43,6 +43,7 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
     private void setupPlayPanel() {
         field = new Field();
         field.setLocation(20, 20);
+        field.addActionListener(this);
     }
 
     private void setupBackgroundPanel() {
@@ -109,6 +110,7 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
                 case KeyEvent.VK_A -> field.moveLeft();
                 case KeyEvent.VK_S -> field.moveDown();
                 case KeyEvent.VK_D -> field.moveRight();
+                case KeyEvent.VK_E -> field.rotateLeft();
                 case KeyEvent.VK_R -> field.rotateRight();
                 case KeyEvent.VK_SPACE -> field.fallDown();
             }
@@ -143,6 +145,10 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
             field.resumeGame();
             pauseButton.setVisible(true);
             resumeButton.setVisible(false);
+            return;
+        }
+        if (e instanceof ScoreEvent scoreEvent) {
+            System.out.println(scoreEvent.getScore());
         }
     }
 }
