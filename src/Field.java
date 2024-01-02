@@ -1,16 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class Field extends JComponent implements ActionListener {
+public class Field extends JComponent {
     private final static int SQUARE_SIZE;
     private final static int WIDTH;
     private final static int HEIGHT;
     private final static int TIMER_DURATION;
     private final int[][] field;
     private final Figure figure;
+    private final Timer timer;
 
     static {
         SQUARE_SIZE = 20;
@@ -22,13 +21,21 @@ public class Field extends JComponent implements ActionListener {
     {
         field = new int[HEIGHT][WIDTH];
         figure = new Figure();
-        Timer gameTimer = new Timer(TIMER_DURATION, e -> {
+         timer = new Timer(TIMER_DURATION, e -> {
             moveDown();
             repaint();
         });
-        gameTimer.start();
+        timer.start();
 
-        setSize(WIDTH * SQUARE_SIZE + 2, HEIGHT * SQUARE_SIZE + 2);
+        setSize(WIDTH * SQUARE_SIZE, HEIGHT * SQUARE_SIZE);
+    }
+
+    public void pauseGame() {
+        timer.stop();
+    }
+
+    public void resumeGame() {
+        timer.start();
     }
 
     private boolean isOutOfSpace(Square[] squares) {
@@ -108,10 +115,5 @@ public class Field extends JComponent implements ActionListener {
                 }
             }
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
