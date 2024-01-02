@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        PlayArea playArea = new PlayArea();
-        playArea.setVisible(true);
+        Menu menu = new Menu();
+        menu.setVisible(true);
     }
 }
