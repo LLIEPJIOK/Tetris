@@ -68,6 +68,12 @@ public class Field extends JComponent {
         }
     }
 
+    public void handleFigureLanding() {
+        saveInField(figure.getSquares());
+        clearFullLines();
+        figure.generateFigure();
+    }
+
     public void moveLeft() {
         figure.moveLeft();
         if (isOutOfSpace(figure.getSquares())) {
@@ -80,9 +86,7 @@ public class Field extends JComponent {
         figure.moveDown();
         if (isOutOfSpace(figure.getSquares())) {
             figure.moveUp();
-            saveInField(figure.getSquares());
-            figure.generateFigure();
-            clearFullLines();
+            handleFigureLanding();
         }
     }
 
@@ -98,6 +102,14 @@ public class Field extends JComponent {
         if (!isOutOfSpace(rotatedSquares)) {
             figure.setSquares(rotatedSquares);
         }
+    }
+
+    public void fallDown() {
+        do {
+            figure.moveDown();
+        } while (!isOutOfSpace(figure.getSquares()));
+        figure.moveUp();
+        handleFigureLanding();
     }
 
     @Override

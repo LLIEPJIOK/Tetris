@@ -110,6 +110,7 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
                 case KeyEvent.VK_S -> field.moveDown();
                 case KeyEvent.VK_D -> field.moveRight();
                 case KeyEvent.VK_R -> field.rotateRight();
+                case KeyEvent.VK_SPACE -> field.fallDown();
             }
             repaint();
         }
