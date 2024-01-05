@@ -2,10 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class AnimatedPanel extends JPanel {
+public class MenuBackgroundPanel extends JPanel {
     private final Image backgroundImage;
 
-    public AnimatedPanel() {
+    public MenuBackgroundPanel() {
         setDoubleBuffered(true);
         backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("MenuGif.gif"))).getImage();
         setLayout(new GridBagLayout());

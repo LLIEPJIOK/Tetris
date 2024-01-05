@@ -3,74 +3,59 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PlayArea extends JFrame implements KeyListener, ActionListener {
+public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private Field field;
-    private Panel backgroundPanel;
-
     private JLabel score;
     private JLabel lines;
     private JLabel linesLabel;
     private JLabel scoreLabel;
     private JButton pauseButton;
     private JButton resumeButton;
-    private JButton exitButton;
+    private JButton menuButton;
+    private final List<ActionListener> actionListeners;
 
-
-    PlayArea() {
+    {
         setupMainPanel();
-        setupPlayPanel();
-        setupBackgroundPanel();
-        this.add(field);
-        this.add(backgroundPanel);
+        actionListeners = new ArrayList<>();
+    }
+
+    public void addActionListener(ActionListener actionListener) {
+        actionListeners.add(actionListener);
     }
 
     private void setupMainPanel() {
-        setTitle("Tetris");
-        setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource("tetris.png"))).getImage());
-        setSize(335, 480);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        addKeyListener(this);
-        setFocusable(true);
-        requestFocusInWindow();
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                field.pauseGame();
-                System.exit(0);
-            }
-        });
+        setBackground(new Color(253, 208, 59));
+        setLayout(null);
+        setPreferredSize(new Dimension(420, 500));
+        setupPauseButton();
+        setupResumeButton();
+        setupMenuButton();
+        setupTextScore();
+        setupTextLines();
+        setupScore();
+        setupLines();
+        setupField();
+        this.add(lines);
+        this.add(score);
+        this.add(linesLabel);
+        this.add(scoreLabel);
+        this.add(pauseButton);
+        this.add(resumeButton);
+        this.add(menuButton);
+        this.add(field);
     }
 
-    private void setupPlayPanel() {
+    private void setupField() {
         field = new Field();
         field.setLocation(20, 20);
+        field.setPreferredSize(new Dimension(100, 100));
         field.addActionListener(this);
     }
 
-    private void setupBackgroundPanel() {
-        backgroundPanel = new Panel();
-        backgroundPanel.setBackground(new Color(253, 208, 59));
-        backgroundPanel.setLayout(null);
-        setupPauseButton();
-        setupResumeButton();
-        setupExitButton();
-        SetupTextScore();
-        SetupTextLines();
-        SetupScore();
-        SetupLines();
-        backgroundPanel.add(lines);
-        backgroundPanel.add(score);
-        backgroundPanel.add(linesLabel);
-        backgroundPanel.add(scoreLabel);
-        backgroundPanel.add(pauseButton);
-        backgroundPanel.add(resumeButton);
-        backgroundPanel.add(exitButton);
-    }
-
-    private JButton SetupButton(String name, Color color) {
+    private JButton setupButton(String name, Color color) {
         JButton button = new JButton(name);
         button.setBackground(color);
         button.setForeground(Color.WHITE);
@@ -84,25 +69,25 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
     }
 
     private void setupPauseButton() {
-        pauseButton = SetupButton("Pause", new Color(128, 215, 84));
+        pauseButton = setupButton("Pause", new Color(128, 215, 84));
         pauseButton.setBounds(235, 345, 70, 30);
         pauseButton.addActionListener(this);
     }
 
     private void setupResumeButton() {
-        resumeButton = SetupButton("Resume", new Color(128, 215, 84));
+        resumeButton = setupButton("Resume", new Color(128, 215, 84));
         resumeButton.setBounds(235, 345, 70, 30);
         resumeButton.setVisible(false);
         resumeButton.addActionListener(this);
     }
 
-    private void setupExitButton() {
-        exitButton = SetupButton("Exit", new Color(253, 58, 58, 255));
-        exitButton.setBounds(235, 390, 70, 30);
-        exitButton.addActionListener(this);
+    private void setupMenuButton() {
+        menuButton = setupButton("Menu", new Color(253, 58, 58, 255));
+        menuButton.setBounds(235, 390, 70, 30);
+        menuButton.addActionListener(this);
     }
 
-    private void SetupTextScore()
+    private void setupTextScore()
     {
         scoreLabel = new JLabel("Score");
         Font font = new Font("Arial",  Font.PLAIN, 20);
@@ -116,7 +101,7 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
     }
 
 
-    private void SetupTextLines()
+    private void setupTextLines()
     {
         linesLabel = new JLabel("Lines");
         Font font = new Font("Arial",  Font.PLAIN, 20);
@@ -129,7 +114,7 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
         linesLabel.setBorder(border);
     }
 
-    private void SetupScore()
+    private void setupScore()
     {
         score = new JLabel("0");
         Font font = new Font("Arial",  Font.PLAIN, 18);
@@ -138,7 +123,7 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
         score.setBounds(240,225,60,25);
     }
 
-    private void SetupLines()
+    private void setupLines()
     {
         lines = new JLabel("0");
         Font font = new Font("Arial",  Font.PLAIN, 18);
@@ -147,14 +132,9 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
         lines.setBounds(243,295,60,25);
     }
 
-//    private void SetupTextScoreInt()
-//    {
-//        scoreLabel = new JLabel("Score:");
-//        Font font = new Font("Arial", Font.ITALIC | Font.BOLD, 16);
-//        scoreLabel.setFont(font);
-//        scoreLabel.setBounds(240,150,60,20);
-//    }
-
+    public void startGame() {
+        field.startNewGame();
+    }
 
     @Override
     public void paint(Graphics g) {
@@ -195,9 +175,12 @@ public class PlayArea extends JFrame implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == exitButton) {
+        if (e.getSource() == menuButton) {
             field.pauseGame();
-            System.exit(0);
+            CommandEvent commandEvent = new CommandEvent(this, "open menu");
+            for (ActionListener actionListener : actionListeners) {
+                actionListener.actionPerformed(commandEvent);
+            }
             return;
         }
         if (e.getSource() == pauseButton) {

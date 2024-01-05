@@ -13,20 +13,24 @@ public class SoundPlayer {
         return AudioSystem.getAudioInputStream(new BufferedInputStream(Objects.requireNonNull(audioSrc)));
     }
 
+    public static void loadMusic() {
+        loadMenuMusic();
+        loadGameMusic();
+    }
 
-    public static void loadMenuMusic(String fileName) {
+    private static void loadMenuMusic() {
         try {
             backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(createAudioInputStream(fileName));
+            backgroundMusic.open(createAudioInputStream("BackMusic.wav"));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadGameMusic(String fileName) {
+    private static void loadGameMusic() {
         try {
             gameMusic = AudioSystem.getClip();
-            gameMusic.open(createAudioInputStream(fileName));
+            gameMusic.open(createAudioInputStream("GameMusic.wav"));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }

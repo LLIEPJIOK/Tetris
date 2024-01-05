@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Field extends JComponent {
+public class Field extends JPanel {
     private final static int SQUARE_SIZE;
     private final static int WIDTH;
     private final static int HEIGHT;
     private final static int TIMER_DURATION;
-    private final int[][] field;
-    private final Figure figure;
-    private final Timer timer;
+    private int[][] field;
+    private Figure figure;
+    private Timer timer;
     private final List<ActionListener> actionListeners;
 
     static {
@@ -23,6 +23,16 @@ public class Field extends JComponent {
     }
 
     {
+        actionListeners = new ArrayList<>();
+
+        setSize(new Dimension(WIDTH * SQUARE_SIZE, HEIGHT * SQUARE_SIZE));
+    }
+
+    public void addActionListener(ActionListener listener) {
+        actionListeners.add(listener);
+    }
+
+    public void startNewGame() {
         field = new int[HEIGHT][WIDTH];
         figure = new Figure();
         timer = new Timer(TIMER_DURATION, e -> {
@@ -30,13 +40,6 @@ public class Field extends JComponent {
             repaint();
         });
         timer.start();
-        actionListeners = new ArrayList<>();
-
-        setSize(WIDTH * SQUARE_SIZE, HEIGHT * SQUARE_SIZE);
-    }
-
-    public void addActionListener(ActionListener listener) {
-        actionListeners.add(listener);
     }
 
     public void pauseGame() {

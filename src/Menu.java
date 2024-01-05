@@ -2,46 +2,41 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.Objects;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Menu extends JFrame {
-    private AnimatedPanel mainPanel;
+public class Menu extends JPanel {
+    private MenuBackgroundPanel mainPanel;
     private JButton start;
-
     private JButton records;
     private JButton exit;
+    private final List<ActionListener> actionListeners;
 
+    {
+        createStartButton();
+        createExitButton();
+        createRecordsButton();
+        createMainPanel();
 
+        this.add(mainPanel);
 
-
-    Menu() {
-        ConfigurateWindow();
-        CreateStartButton();
-        CreateExitButton();
-        CreateRecordsButton();
-        CreateMainPanel();
-        SoundPlayer.loadMenuMusic("BackMusic.wav");
-        SoundPlayer.loadGameMusic("GameMusic.wav");
-        add(mainPanel);
-        SoundPlayer.playMenuMusic();
+        actionListeners = new ArrayList<>();
     }
 
-    private void CreateMainPanel() {
-        mainPanel = new AnimatedPanel();
+    public void addActionListener(ActionListener actionListener) {
+        actionListeners.add(actionListener);
+    }
+
+    private void createMainPanel() {
+        mainPanel = new MenuBackgroundPanel();
         mainPanel.add(start, 1, 1);
         mainPanel.add(records, 1, 2);
         mainPanel.add(exit, 1, 3);
+        mainPanel.setPreferredSize(new Dimension(420, 500));
     }
 
-    private void ConfigurateWindow() {
-        setTitle("Tetris");
-        setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource("tetris.png"))).getImage());
-        setSize(420, 500);
-        setLocationRelativeTo(null);
-        setResizable(false);
-    }
-
-    private JButton CreateButton(String name) {
+    private JButton createButton(String name) {
         JButton button = new JButton(name);
         button.setBackground(new Color(0xFFE3C755, true));
         button.setForeground(Color.WHITE);
@@ -55,26 +50,25 @@ public class Menu extends JFrame {
         return button;
     }
 
-    private void CreateStartButton() {
-        start = CreateButton("Start");
+    private void createStartButton() {
+        start = createButton("Start");
         start.addActionListener(e -> {
-            this.setVisible(false);
-            SoundPlayer.stopMenuMusic();
-            SoundPlayer.playGameMusic();
-            PlayArea playArea = new PlayArea();
-            playArea.setVisible(true);
+            CommandEvent commandEvent = new CommandEvent(this, "start game");
+            for (ActionListener actionListener : actionListeners) {
+                actionListener.actionPerformed(commandEvent);
+            }
         });
     }
 
-    private void CreateExitButton() {
-        exit = CreateButton("Exit");
+    private void createExitButton() {
+        exit = createButton("Exit");
         exit.addActionListener(e -> {
             System.exit(0);
         });
     }
 
-    private void CreateRecordsButton() {
-        records = CreateButton("Records");
+    private void createRecordsButton() {
+        records = createButton("Records");
         exit.addActionListener(e -> {
             //TODO: Create Records
         });
