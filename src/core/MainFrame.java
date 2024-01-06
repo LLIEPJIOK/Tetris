@@ -1,3 +1,9 @@
+package core;
+
+import dto.CommandEvent;
+import utils.ApplicationConstants;
+import utils.SoundPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,7 +33,8 @@ public class MainFrame extends JFrame implements ActionListener {
         this.add(cardPanel);
 
         setTitle("Tetris");
-        setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource("tetris.png"))).getImage());
+        setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource(
+                ApplicationConstants.getTetrisIconPath()))).getImage());
         setSize(ApplicationConstants.getApplicationDimension());
         setLocationRelativeTo(null);
         setResizable(false);

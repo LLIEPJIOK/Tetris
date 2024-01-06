@@ -1,3 +1,5 @@
+package utils;
+
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class SoundPlayer {
     private static void loadMenuMusic() {
         try {
             backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(createAudioInputStream(ApplicationConstants.getBackgroundMusicName()));
+            backgroundMusic.open(createAudioInputStream(ApplicationConstants.getBackgroundMusicPath()));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -30,7 +32,7 @@ public class SoundPlayer {
     private static void loadGameMusic() {
         try {
             gameMusic = AudioSystem.getClip();
-            gameMusic.open(createAudioInputStream(ApplicationConstants.getGameMusicName()));
+            gameMusic.open(createAudioInputStream(ApplicationConstants.getGameMusicPath()));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }

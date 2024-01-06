@@ -1,3 +1,5 @@
+package dto;
+
 import lombok.Getter;
 
 import java.awt.event.ActionEvent;

@@ -1,3 +1,5 @@
+package dto;
+
 import java.awt.event.ActionEvent;
 
 public class CommandEvent extends ActionEvent {

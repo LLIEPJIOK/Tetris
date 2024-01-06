@@ -1,6 +1,9 @@
+package dto;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import utils.GamePainter;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -106,6 +109,6 @@ public class Figure {
 
     public void paint(Graphics g) {
         Arrays.stream(squares)
-              .forEach(square -> Painter.paintSquare(g, square.getX(), square.getY()));
+              .forEach(square -> GamePainter.paintSquare(g, square.getX(), square.getY()));
     }
 }

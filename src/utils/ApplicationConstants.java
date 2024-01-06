@@ -1,3 +1,5 @@
+package utils;
+
 import lombok.Getter;
 
 import java.awt.*;
@@ -16,9 +18,13 @@ public class ApplicationConstants {
     @Getter
     private final static int delta;
     @Getter
-    private final static String backgroundMusicName;
+    private final static String backgroundMusicPath;
     @Getter
-    private final static String gameMusicName;
+    private final static String gameMusicPath;
+    @Getter
+    private final static String tetrisIconPath;
+    @Getter
+    private final static String menuGifPath;
 
     static {
         applicationDimension = new Dimension(420, 500);
@@ -27,7 +33,9 @@ public class ApplicationConstants {
         fieldWidth = 10;
         fieldHeight = 20;
         timerDuration = 500;
-        backgroundMusicName = "BackMusic.wav";
-        gameMusicName = "GameMusic.wav";
+        backgroundMusicPath = "../BackMusic.wav";
+        gameMusicPath = "../GameMusic.wav";
+        tetrisIconPath = "../tetris.png";
+        menuGifPath = "../MenuGif.gif";
     }
 }

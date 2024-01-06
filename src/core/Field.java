@@ -1,3 +1,11 @@
+package core;
+
+import dto.Figure;
+import dto.ScoreEvent;
+import dto.Square;
+import utils.ApplicationConstants;
+import utils.GamePainter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -12,7 +20,7 @@ public class Field extends JPanel {
     private final static int timerDuration;
     private int[][] field;
     private Figure figure;
-    private Timer timer;
+    private final Timer timer;
     private final List<ActionListener> actionListeners;
 
     static {
@@ -51,8 +59,8 @@ public class Field extends JPanel {
         timer.start();
     }
 
-    private boolean isOutOfSpace(Square[] squares) {
-        return Arrays.stream(squares).anyMatch(
+    private boolean isInEmptySpace(Square[] squares) {
+        return Arrays.stream(squares).noneMatch(
                 square -> square.getX() < 0 || square.getX() >= fieldWidth || square.getY() >= fieldHeight ||
                         field[square.getY()][square.getX()] != 0);
     }
@@ -100,38 +108,44 @@ public class Field extends JPanel {
     }
 
     public void moveLeft() {
-        figure.moveLeft();
-        if (isOutOfSpace(figure.getSquares())) {
-            figure.moveRight();
+        for (Square square : figure.getSquares()) {
+            if (square.getX() == 0 || field[square.getY()][square.getX() - 1] != 0) {
+                return;
+            }
         }
+        figure.moveLeft();
     }
 
 
     public void moveDown() {
-        figure.moveDown();
-        if (isOutOfSpace(figure.getSquares())) {
-            figure.moveUp();
-            handleFigureLanding();
+        for (Square square : figure.getSquares()) {
+            if (square.getY() + 1 == fieldHeight || field[square.getY() + 1][square.getX()] != 0) {
+                handleFigureLanding();
+                return;
+            }
         }
+        figure.moveDown();
     }
 
     public void moveRight() {
-        figure.moveRight();
-        if (isOutOfSpace(figure.getSquares())) {
-            figure.moveLeft();
+        for (Square square : figure.getSquares()) {
+            if (square.getX() + 1 == fieldWidth || field[square.getY()][square.getX() + 1] != 0) {
+                return;
+            }
         }
+        figure.moveRight();
     }
 
     public void rotateLeft() {
         Square[] rotatedSquares = figure.rotateLeft();
-        if (!isOutOfSpace(rotatedSquares)) {
+        if (isInEmptySpace(rotatedSquares)) {
             figure.setSquares(rotatedSquares);
         }
     }
 
     public void rotateRight() {
         Square[] rotatedSquares = figure.rotateRight();
-        if (!isOutOfSpace(rotatedSquares)) {
+        if (isInEmptySpace(rotatedSquares)) {
             figure.setSquares(rotatedSquares);
         }
     }
@@ -139,7 +153,7 @@ public class Field extends JPanel {
     public void fallDown() {
         do {
             figure.moveDown();
-        } while (!isOutOfSpace(figure.getSquares()));
+        } while (isInEmptySpace(figure.getSquares()));
         figure.moveUp();
         handleFigureLanding();
     }
@@ -155,7 +169,7 @@ public class Field extends JPanel {
         for (int i = 0; i < fieldHeight; ++i) {
             for (int j = 0; j < fieldWidth; ++j) {
                 if (field[i][j] != 0) {
-                    Painter.paintSquare(g, j, i);
+                    GamePainter.paintSquare(g, j, i);
                 }
             }
         }

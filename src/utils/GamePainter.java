@@ -1,8 +1,10 @@
+package utils;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public class Painter {
+public class GamePainter {
     private final static int squareSize;
     private final static int delta;
 

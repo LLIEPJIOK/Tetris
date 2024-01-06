@@ -1,3 +1,5 @@
+package utils;
+
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

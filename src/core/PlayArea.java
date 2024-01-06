@@ -1,3 +1,10 @@
+package core;
+
+import dto.CommandEvent;
+import dto.ScoreEvent;
+import utils.ApplicationConstants;
+import utils.ObjectCreator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
