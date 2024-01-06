@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,16 +10,14 @@ public class Menu extends JPanel {
     private JButton records;
     private JButton exit;
     private final List<ActionListener> actionListeners;
+    private final Color buttonColor;
 
     {
-        createStartButton();
-        createExitButton();
-        createRecordsButton();
-        createMainPanel();
-
-        this.add(mainPanel);
-
         actionListeners = new ArrayList<>();
+        buttonColor = new Color(0xFFE3C755, true);
+
+        createMainPanel();
+        this.add(mainPanel);
     }
 
     public void addActionListener(ActionListener actionListener) {
@@ -29,6 +25,10 @@ public class Menu extends JPanel {
     }
 
     private void createMainPanel() {
+        createStartButton();
+        createRecordsButton();
+        createExitButton();
+
         mainPanel = new MenuBackgroundPanel();
         mainPanel.add(start, 1, 1);
         mainPanel.add(records, 1, 2);
@@ -36,22 +36,9 @@ public class Menu extends JPanel {
         mainPanel.setPreferredSize(new Dimension(420, 500));
     }
 
-    private JButton createButton(String name) {
-        JButton button = new JButton(name);
-        button.setBackground(new Color(0xFFE3C755, true));
-        button.setForeground(Color.WHITE);
-        Border border = new LineBorder(new Color(0, 0, 0), 4, false);
-        button.setBorder(border);
-        Font font = new Font("Arial", Font.BOLD, 26);
-        button.setFont(font);
-        button.setForeground(new Color(0, 0, 0, 255));
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(150, 50));
-        return button;
-    }
-
     private void createStartButton() {
-        start = createButton("Start");
+        start = ObjectCreator.createButton("Start", buttonColor, 4, 26);
+        start.setPreferredSize(new Dimension(150, 50));
         start.addActionListener(e -> {
             CommandEvent commandEvent = new CommandEvent(this, "start game");
             for (ActionListener actionListener : actionListeners) {
@@ -60,17 +47,19 @@ public class Menu extends JPanel {
         });
     }
 
-    private void createExitButton() {
-        exit = createButton("Exit");
-        exit.addActionListener(e -> {
-            System.exit(0);
+    private void createRecordsButton() {
+        records = ObjectCreator.createButton("Records", buttonColor, 4, 26);
+        records.setPreferredSize(new Dimension(150, 50));
+        records.addActionListener(e -> {
+            //TODO: Create Records
         });
     }
 
-    private void createRecordsButton() {
-        records = createButton("Records");
+    private void createExitButton() {
+        exit = ObjectCreator.createButton("Exit", buttonColor, 4, 26);
+        exit.setPreferredSize(new Dimension(150, 50));
         exit.addActionListener(e -> {
-            //TODO: Create Records
+            System.exit(0);
         });
     }
 }
