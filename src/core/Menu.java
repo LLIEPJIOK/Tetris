@@ -1,11 +1,11 @@
 package core;
 
-import dto.CommandEvent;
 import utils.ApplicationConstants;
 import utils.ObjectCreator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +46,9 @@ public class Menu extends JPanel {
         start = ObjectCreator.createButton("Start", buttonColor, 4, 26);
         start.setPreferredSize(new Dimension(150, 50));
         start.addActionListener(e -> {
-            CommandEvent commandEvent = new CommandEvent(this, "start game");
+            ActionEvent actionEvent = new ActionEvent(this, 1, "start game");
             for (ActionListener actionListener : actionListeners) {
-                actionListener.actionPerformed(commandEvent);
+                actionListener.actionPerformed(actionEvent);
             }
         });
     }

@@ -1,6 +1,5 @@
 package core;
 
-import dto.CommandEvent;
 import utils.ApplicationConstants;
 import utils.SoundPlayer;
 
@@ -54,21 +53,19 @@ public class MainFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e instanceof CommandEvent commandEvent) {
-            switch (commandEvent.getActionCommand()) {
-                case "start game" -> {
-                    playArea.startGame();
-                    CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
-                    cardLayout.show(cardPanel, "PlayArea")  ;
-                    SoundPlayer.stopMenuMusic();
-                    SoundPlayer.playGameMusic();
-                }
-                case "open menu" -> {
-                    CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
-                    cardLayout.show(cardPanel, "Menu");
-                    SoundPlayer.stopGameMusic();
-                    SoundPlayer.playMenuMusic();
-                }
+        switch (e.getActionCommand()) {
+            case "start game" -> {
+                playArea.startGame();
+                CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                cardLayout.show(cardPanel, "PlayArea")  ;
+                SoundPlayer.stopMenuMusic();
+                SoundPlayer.playGameMusic();
+            }
+            case "open menu" -> {
+                CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                cardLayout.show(cardPanel, "Menu");
+                SoundPlayer.stopGameMusic();
+                SoundPlayer.playMenuMusic();
             }
         }
     }

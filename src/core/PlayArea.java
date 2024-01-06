@@ -1,6 +1,5 @@
 package core;
 
-import dto.CommandEvent;
 import dto.ScoreEvent;
 import utils.ApplicationConstants;
 import utils.ObjectCreator;
@@ -153,9 +152,9 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == menuButton) {
             field.pauseGame();
-            CommandEvent commandEvent = new CommandEvent(this, "open menu");
+            ActionEvent actionEvent = new ActionEvent(this, 1, "open menu");
             for (ActionListener actionListener : actionListeners) {
-                actionListener.actionPerformed(commandEvent);
+                actionListener.actionPerformed(actionEvent);
             }
             return;
         }
