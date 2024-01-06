@@ -28,7 +28,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         setTitle("Tetris");
         setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource("tetris.png"))).getImage());
-        setSize(420, 500);
+        setSize(ApplicationConstants.getApplicationDimension());
         setLocationRelativeTo(null);
         setResizable(false);
         setFocusable(true);

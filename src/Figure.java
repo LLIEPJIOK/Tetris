@@ -9,8 +9,6 @@ import java.util.Random;
 @Getter
 @Setter
 public class Figure {
-    private final static int WIDTH;
-    private final static int HEIGHT;
     private final static Random rnd;
     private Square[] squares;
     private int type;
@@ -35,20 +33,17 @@ public class Figure {
             };
 
     static {
-        WIDTH = 10;
-        HEIGHT = 20;
         rnd = new Random();
     }
 
     {
         squares = new Square[4];
-        generateFigure();
     }
 
-    public void generateFigure() {
+    public void generateFigure(int offset) {
         type = rnd.nextInt(7);
         for (int i = 0; i < 4; ++i) {
-            int x = (figures[type][i] & 1) + WIDTH / 2 - 1;
+            int x = (figures[type][i] & 1) + offset;
             int y = figures[type][i] / 2;
             squares[i] = new Square(x, y);
         }

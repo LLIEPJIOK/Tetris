@@ -6,26 +6,30 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Field extends JPanel {
-    private final static int SQUARE_SIZE;
-    private final static int WIDTH;
-    private final static int HEIGHT;
-    private final static int TIMER_DURATION;
+    private final static int squareSize;
+    private final static int fieldWidth;
+    private final static int fieldHeight;
+    private final static int timerDuration;
     private int[][] field;
     private Figure figure;
     private Timer timer;
     private final List<ActionListener> actionListeners;
 
     static {
-        SQUARE_SIZE = 20;
-        WIDTH = 10;
-        HEIGHT = 20;
-        TIMER_DURATION = 500;
+        squareSize = ApplicationConstants.getSquareSize();
+        fieldWidth = ApplicationConstants.getFieldWidth();
+        fieldHeight = ApplicationConstants.getFieldHeight();
+        timerDuration = ApplicationConstants.getTimerDuration();
     }
 
     {
         actionListeners = new ArrayList<>();
+        timer = new Timer(timerDuration, e -> {
+            moveDown();
+            repaint();
+        });
 
-        setSize(new Dimension(WIDTH * SQUARE_SIZE, HEIGHT * SQUARE_SIZE));
+        setSize(new Dimension(fieldWidth * squareSize, fieldHeight * squareSize));
     }
 
     public void addActionListener(ActionListener listener) {
@@ -33,12 +37,9 @@ public class Field extends JPanel {
     }
 
     public void startNewGame() {
-        field = new int[HEIGHT][WIDTH];
+        field = new int[fieldHeight][fieldWidth];
         figure = new Figure();
-        timer = new Timer(TIMER_DURATION, e -> {
-            moveDown();
-            repaint();
-        });
+        figure.generateFigure(fieldWidth / 2 - 1);
         timer.start();
     }
 
@@ -52,7 +53,7 @@ public class Field extends JPanel {
 
     private boolean isOutOfSpace(Square[] squares) {
         return Arrays.stream(squares).anyMatch(
-                square -> square.getX() < 0 || square.getX() >= WIDTH || square.getY() >= HEIGHT ||
+                square -> square.getX() < 0 || square.getX() >= fieldWidth || square.getY() >= fieldHeight ||
                         field[square.getY()][square.getX()] != 0);
     }
 
@@ -64,7 +65,7 @@ public class Field extends JPanel {
         for (int i = id; i > 0; --i) {
             field[i] = field[i - 1];
         }
-        field[0] = new int[WIDTH];
+        field[0] = new int[fieldWidth];
     }
 
     private void notifyListeners(int lines) {
@@ -76,12 +77,12 @@ public class Field extends JPanel {
 
     private void clearFullLines() {
         int lines = 0;
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
+        for (int i = 0; i < fieldHeight; i++) {
+            for (int j = 0; j < fieldWidth; j++) {
                 if (field[i][j] == 0) {
                     break;
                 }
-                if (j + 1 == WIDTH) {
+                if (j + 1 == fieldWidth) {
                     clearLine(i);
                     ++lines;
                 }
@@ -95,7 +96,7 @@ public class Field extends JPanel {
     public void handleFigureLanding() {
         saveInField(figure.getSquares());
         clearFullLines();
-        figure.generateFigure();
+        figure.generateFigure(fieldWidth / 2 - 1);
     }
 
     public void moveLeft() {
@@ -148,11 +149,11 @@ public class Field extends JPanel {
         super.paintComponent(g);
 
         g.setColor(Color.BLACK);
-        g.drawRect(0, 0, WIDTH * SQUARE_SIZE, HEIGHT * SQUARE_SIZE);
+        g.drawRect(0, 0, fieldWidth * squareSize, fieldHeight * squareSize);
 
         figure.paint(g);
-        for (int i = 0; i < HEIGHT; ++i) {
-            for (int j = 0; j < WIDTH; ++j) {
+        for (int i = 0; i < fieldHeight; ++i) {
+            for (int j = 0; j < fieldWidth; ++j) {
                 if (field[i][j] != 0) {
                     Painter.paintSquare(g, j, i);
                 }

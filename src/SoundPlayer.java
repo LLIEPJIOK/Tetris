@@ -21,7 +21,7 @@ public class SoundPlayer {
     private static void loadMenuMusic() {
         try {
             backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(createAudioInputStream("BackMusic.wav"));
+            backgroundMusic.open(createAudioInputStream(ApplicationConstants.getBackgroundMusicName()));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -30,7 +30,7 @@ public class SoundPlayer {
     private static void loadGameMusic() {
         try {
             gameMusic = AudioSystem.getClip();
-            gameMusic.open(createAudioInputStream("GameMusic.wav"));
+            gameMusic.open(createAudioInputStream(ApplicationConstants.getGameMusicName()));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }

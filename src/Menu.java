@@ -33,7 +33,7 @@ public class Menu extends JPanel {
         mainPanel.add(start, 1, 1);
         mainPanel.add(records, 1, 2);
         mainPanel.add(exit, 1, 3);
-        mainPanel.setPreferredSize(new Dimension(420, 500));
+        mainPanel.setPreferredSize(ApplicationConstants.getApplicationDimension());
     }
 
     private void createStartButton() {

@@ -36,7 +36,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
         setBackground(new Color(253, 208, 59));
         setLayout(null);
-        setPreferredSize(new Dimension(420, 500));
+        setPreferredSize(ApplicationConstants.getApplicationDimension());
 
         this.add(lines);
         this.add(score);
