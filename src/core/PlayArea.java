@@ -1,7 +1,9 @@
 package core;
 
 import dto.ScoreEvent;
+import org.jetbrains.annotations.NotNull;
 import utils.ApplicationConstants;
+import utils.GamePainter;
 import utils.ObjectCreator;
 
 import javax.swing.*;
@@ -64,13 +66,13 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private void setupPauseButton() {
         pauseButton = ObjectCreator.createButton("Pause", new Color(128, 215, 84), 2, 16);
         pauseButton.setBounds(235, 345, 70, 30);
+        pauseButton.setVisible(false);
         pauseButton.addActionListener(this);
     }
 
     private void setupResumeButton() {
         resumeButton = ObjectCreator.createButton("Resume", new Color(128, 215, 84), 2, 16);
         resumeButton.setBounds(235, 345, 70, 30);
-        resumeButton.setVisible(false);
         resumeButton.addActionListener(this);
     }
 
@@ -108,16 +110,18 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     }
 
     public void startGame() {
+        resumeButton.doClick();
         field.startNewGame();
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        GamePainter.paintFigure(g, field.getNextFigure(), 200, 20);
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(@NotNull KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_ESCAPE) {
             if (pauseButton.isVisible()) {
@@ -156,6 +160,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             for (ActionListener actionListener : actionListeners) {
                 actionListener.actionPerformed(actionEvent);
             }
+            pauseButton.doClick();
             return;
         }
         if (e.getSource() == pauseButton) {

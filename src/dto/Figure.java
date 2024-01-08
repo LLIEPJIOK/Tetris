@@ -3,11 +3,10 @@ package dto;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-import utils.GamePainter;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 @Getter
 @Setter
@@ -43,6 +42,21 @@ public class Figure {
         squares = new Square[4];
     }
 
+    private void putOnTop() {
+        int mn = Integer.MAX_VALUE;
+        for (Square square : squares) {
+            mn = Math.min(mn, square.getY());
+        }
+        while (mn > 0) {
+            moveUp();
+            --mn;
+        }
+        while (mn < 0) {
+            moveDown();
+            ++mn;
+        }
+    }
+
     public void generateFigure(int offset) {
         type = rnd.nextInt(7);
         for (int i = 0; i < 4; ++i) {
@@ -50,6 +64,9 @@ public class Figure {
             int y = figures[type][i] / 2;
             squares[i] = new Square(x, y);
         }
+        int rotations = rnd.nextInt(4);
+        IntStream.range(0, rotations).forEach(i -> squares = rotateRight());
+        putOnTop();
     }
 
     private Square @NotNull [] squareArrayCopy(Square @NotNull [] squares) {
@@ -107,8 +124,8 @@ public class Figure {
         return rotatedSquares;
     }
 
-    public void paint(Graphics g) {
-        Arrays.stream(squares)
-              .forEach(square -> GamePainter.paintSquare(g, square.getX(), square.getY()));
+    public static void copy(@NotNull Figure src, @NotNull Figure dest) {
+        System.arraycopy(src.squares, 0, dest.squares, 0, 4);
+        dest.type = src.type;
     }
 }

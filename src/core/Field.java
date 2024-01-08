@@ -1,25 +1,28 @@
 package core;
-
 import dto.Figure;
 import dto.ScoreEvent;
 import dto.Square;
+import lombok.Getter;
 import utils.ApplicationConstants;
 import utils.GamePainter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public class Field extends JPanel {
     private final static int squareSize;
     private final static int fieldWidth;
     private final static int fieldHeight;
     private final static int timerDuration;
-    private int[][] field;
-    private Figure figure;
+    private int[][] spaces;
+    private Figure curFigure;
+    private Figure nextFigure;
     private final Timer timer;
     private final List<ActionListener> actionListeners;
 
@@ -45,9 +48,11 @@ public class Field extends JPanel {
     }
 
     public void startNewGame() {
-        field = new int[fieldHeight][fieldWidth];
-        figure = new Figure();
-        figure.generateFigure(fieldWidth / 2 - 1);
+        spaces = new int[fieldHeight][fieldWidth];
+        curFigure = new Figure();
+        curFigure.generateFigure(fieldWidth / 2 - 1);
+        nextFigure = new Figure();
+        nextFigure.generateFigure(fieldWidth / 2 - 1);
         timer.start();
     }
 
@@ -61,25 +66,24 @@ public class Field extends JPanel {
 
     private boolean isInEmptySpace(Square[] squares) {
         return Arrays.stream(squares).noneMatch(
-                square -> square.getX() < 0 || square.getX() >= fieldWidth || square.getY() >= fieldHeight ||
-                        field[square.getY()][square.getX()] != 0);
+                square -> square.getX() < 0 || square.getY() < 0 || square.getX() >= fieldWidth || square.getY() >= fieldHeight ||
+                        spaces[square.getY()][square.getX()] != 0);
     }
 
     private void saveInField(Square[] squares) {
-        Arrays.stream(squares).forEach(square -> field[square.getY()][square.getX()] = 1);
+        Arrays.stream(squares).forEach(square -> spaces[square.getY()][square.getX()] = 1);
     }
 
     private void clearLine(int id) {
         for (int i = id; i > 0; --i) {
-            field[i] = field[i - 1];
+            spaces[i] = spaces[i - 1];
         }
-        field[0] = new int[fieldWidth];
+        spaces[0] = new int[fieldWidth];
     }
 
-    private void notifyListeners(int lines) {
-        ScoreEvent scoreEvent = new ScoreEvent(this, lines);
+    private void notifyListeners(ActionEvent event) {
         for (ActionListener actionListener : actionListeners) {
-            actionListener.actionPerformed(scoreEvent);
+            actionListener.actionPerformed(event);
         }
     }
 
@@ -87,7 +91,7 @@ public class Field extends JPanel {
         int lines = 0;
         for (int i = 0; i < fieldHeight; i++) {
             for (int j = 0; j < fieldWidth; j++) {
-                if (field[i][j] == 0) {
+                if (spaces[i][j] == 0) {
                     break;
                 }
                 if (j + 1 == fieldWidth) {
@@ -97,64 +101,66 @@ public class Field extends JPanel {
             }
         }
         if (lines != 0) {
-            notifyListeners(lines);
+            ScoreEvent scoreEvent = new ScoreEvent(this, lines);
+            notifyListeners(scoreEvent);
         }
     }
 
     public void handleFigureLanding() {
-        saveInField(figure.getSquares());
+        saveInField(curFigure.getSquares());
         clearFullLines();
-        figure.generateFigure(fieldWidth / 2 - 1);
+        Figure.copy(nextFigure, curFigure);
+        nextFigure.generateFigure(fieldWidth / 2 - 1);
     }
 
     public void moveLeft() {
-        for (Square square : figure.getSquares()) {
-            if (square.getX() == 0 || field[square.getY()][square.getX() - 1] != 0) {
+        for (Square square : curFigure.getSquares()) {
+            if (square.getX() == 0 || spaces[square.getY()][square.getX() - 1] != 0) {
                 return;
             }
         }
-        figure.moveLeft();
+        curFigure.moveLeft();
     }
 
 
     public void moveDown() {
-        for (Square square : figure.getSquares()) {
-            if (square.getY() + 1 == fieldHeight || field[square.getY() + 1][square.getX()] != 0) {
+        for (Square square : curFigure.getSquares()) {
+            if (square.getY() + 1 == fieldHeight || spaces[square.getY() + 1][square.getX()] != 0) {
                 handleFigureLanding();
                 return;
             }
         }
-        figure.moveDown();
+        curFigure.moveDown();
     }
 
     public void moveRight() {
-        for (Square square : figure.getSquares()) {
-            if (square.getX() + 1 == fieldWidth || field[square.getY()][square.getX() + 1] != 0) {
+        for (Square square : curFigure.getSquares()) {
+            if (square.getX() + 1 == fieldWidth || spaces[square.getY()][square.getX() + 1] != 0) {
                 return;
             }
         }
-        figure.moveRight();
+        curFigure.moveRight();
     }
 
     public void rotateLeft() {
-        Square[] rotatedSquares = figure.rotateLeft();
+        Square[] rotatedSquares = curFigure.rotateLeft();
         if (isInEmptySpace(rotatedSquares)) {
-            figure.setSquares(rotatedSquares);
+            curFigure.setSquares(rotatedSquares);
         }
     }
 
     public void rotateRight() {
-        Square[] rotatedSquares = figure.rotateRight();
+        Square[] rotatedSquares = curFigure.rotateRight();
         if (isInEmptySpace(rotatedSquares)) {
-            figure.setSquares(rotatedSquares);
+            curFigure.setSquares(rotatedSquares);
         }
     }
 
     public void fallDown() {
         do {
-            figure.moveDown();
-        } while (isInEmptySpace(figure.getSquares()));
-        figure.moveUp();
+            curFigure.moveDown();
+        } while (isInEmptySpace(curFigure.getSquares()));
+        curFigure.moveUp();
         handleFigureLanding();
     }
 
@@ -165,10 +171,10 @@ public class Field extends JPanel {
         g.setColor(Color.BLACK);
         g.drawRect(0, 0, fieldWidth * squareSize, fieldHeight * squareSize);
 
-        figure.paint(g);
+        GamePainter.paintFigure(g, curFigure, 0, 0);
         for (int i = 0; i < fieldHeight; ++i) {
             for (int j = 0; j < fieldWidth; ++j) {
-                if (field[i][j] != 0) {
+                if (spaces[i][j] != 0) {
                     GamePainter.paintSquare(g, j, i);
                 }
             }

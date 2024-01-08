@@ -64,8 +64,6 @@ public class Menu extends JPanel {
     private void createExitButton() {
         exit = ObjectCreator.createButton("Exit", buttonColor, 4, 26);
         exit.setPreferredSize(new Dimension(150, 50));
-        exit.addActionListener(e -> {
-            System.exit(0);
-        });
+        exit.addActionListener(e -> System.exit(0));
     }
 }
