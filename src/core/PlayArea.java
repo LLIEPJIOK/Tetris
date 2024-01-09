@@ -18,14 +18,20 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private JLabel lines;
     private JLabel linesLabel;
     private JLabel scoreLabel;
-    private JButton pauseButton;
-    private JButton resumeButton;
-    private JButton menuButton;
+    private PauseButton pauseButton;
+    private PauseFrame pauseFrame;
     private final List<ActionListener> actionListeners;
+    private final Timer pauseKeyTimer;
+    private boolean isGameStarted;
 
     {
         setupMainPanel();
         actionListeners = new ArrayList<>();
+        pauseKeyTimer = new Timer(50, e -> {
+            Timer timer = (Timer) e.getSource();
+            timer.stop();
+        });
+        isGameStarted = false;
     }
 
     public void addActionListener(ActionListener actionListener) {
@@ -34,102 +40,91 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     private void setupMainPanel() {
         setupPauseButton();
-        setupResumeButton();
-        setupMenuButton();
         setupTextScore();
         setupTextLines();
         setupScore();
         setupLines();
         setupField();
+        setupPauseFrame();
 
         setBackground(new Color(253, 208, 59));
         setLayout(null);
         setPreferredSize(ApplicationConstants.getApplicationDimension());
+    }
 
-        this.add(lines);
-        this.add(score);
-        this.add(linesLabel);
-        this.add(scoreLabel);
+    private void setupPauseButton() {
+        pauseButton = new PauseButton();
+        pauseButton.setLocation(3, 3);
+        pauseButton.addActionListener(this);
         this.add(pauseButton);
-        this.add(resumeButton);
-        this.add(menuButton);
-        this.add(field);
+    }
+
+    private void setupTextScore() {
+        scoreLabel = ObjectCreator.createLabel("Score", 2, 20);
+        scoreLabel.setOpaque(true);
+        scoreLabel.setBounds(240, 200, 60, 25);
+        this.add(scoreLabel);
+    }
+
+
+    private void setupTextLines() {
+        linesLabel = ObjectCreator.createLabel("Lines", 2, 20);
+        linesLabel.setOpaque(true);
+        linesLabel.setBounds(243, 270, 53, 25);
+        this.add(linesLabel);
+    }
+
+    private void setupScore() {
+        score = ObjectCreator.createLabel("0", 0, 18);
+        score.setBounds(240, 225, 60, 25);
+        this.add(score);
+    }
+
+    private void setupLines() {
+        lines = ObjectCreator.createLabel("0", 0, 18);
+        lines.setBounds(243, 295, 60, 25);
+        this.add(lines);
     }
 
     private void setupField() {
         field = new Field();
-        field.setLocation(20, 20);
+        field.setLocation(20, 30);
         field.setPreferredSize(new Dimension(100, 100));
         field.addActionListener(this);
+        this.add(field);
     }
 
-    private void setupPauseButton() {
-        pauseButton = ObjectCreator.createButton("Pause", new Color(128, 215, 84), 2, 16);
-        pauseButton.setBounds(235, 345, 70, 30);
-        pauseButton.setVisible(false);
-        pauseButton.addActionListener(this);
-    }
-
-    private void setupResumeButton() {
-        resumeButton = ObjectCreator.createButton("Resume", new Color(128, 215, 84), 2, 16);
-        resumeButton.setBounds(235, 345, 70, 30);
-        resumeButton.addActionListener(this);
-    }
-
-    private void setupMenuButton() {
-        menuButton = ObjectCreator.createButton("Menu", new Color(253, 58, 58), 2, 16);
-        menuButton.setBounds(235, 390, 70, 30);
-        menuButton.addActionListener(this);
-    }
-
-    private void setupTextScore()
-    {
-        scoreLabel = ObjectCreator.createLabel("Score", 2, 20);
-        scoreLabel.setOpaque(true);
-        scoreLabel.setBounds(240,200,60,25);
-    }
-
-
-    private void setupTextLines()
-    {
-        linesLabel = ObjectCreator.createLabel("Lines", 2, 20);
-        linesLabel.setOpaque(true);
-        linesLabel.setBounds(243,270,53,25);
-    }
-
-    private void setupScore()
-    {
-        score = ObjectCreator.createLabel("0", 0, 18);
-        score.setBounds(240,225,60,25);
-    }
-
-    private void setupLines()
-    {
-        lines = ObjectCreator.createLabel("0", 0, 18);
-        lines.setBounds(243,295,60,25);
+    private void setupPauseFrame() {
+        pauseFrame = new PauseFrame();
+        pauseFrame.setVisible(false);
+        pauseFrame.addActionListener(this);
+        setComponentZOrder(pauseFrame, 0);
+        this.add(pauseFrame);
     }
 
     public void startGame() {
-        resumeButton.doClick();
         field.startNewGame();
+        isGameStarted = true;
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        GamePainter.paintFigure(g, field.getNextFigure(), 200, 20);
+        GamePainter.paintFigure(g, field.getNextFigure(), 200, 30);
     }
 
     @Override
     public void keyPressed(@NotNull KeyEvent e) {
+        if (!isGameStarted) {
+            return;
+        }
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_ESCAPE) {
-            if (pauseButton.isVisible()) {
+            if (!pauseKeyTimer.isRunning()) {
                 pauseButton.doClick();
-            } else {
-                resumeButton.doClick();
+                pauseKeyTimer.start();
             }
-        } else if (pauseButton.isVisible()) {
+        } else if (pauseButton.getType() == 0) {
             switch (keyCode) {
                 case KeyEvent.VK_A -> field.moveLeft();
                 case KeyEvent.VK_S -> field.moveDown();
@@ -153,26 +148,17 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == menuButton) {
-            field.pauseGame();
-            ActionEvent actionEvent = new ActionEvent(this, 1, "open menu");
-            for (ActionListener actionListener : actionListeners) {
-                actionListener.actionPerformed(actionEvent);
-            }
-            pauseButton.doClick();
-            return;
-        }
+    public void actionPerformed(@NotNull ActionEvent e) {
         if (e.getSource() == pauseButton) {
-            field.pauseGame();
-            pauseButton.setVisible(false);
-            resumeButton.setVisible(true);
-            return;
-        }
-        if (e.getSource() == resumeButton) {
-            field.resumeGame();
-            pauseButton.setVisible(true);
-            resumeButton.setVisible(false);
+            pauseButton.changeType();
+            pauseFrame.setVisible(pauseButton.getType() == 1);
+            if (pauseButton.getType() == 0) {
+                field.resumeGame();
+            } else {
+                field.pauseGame();
+            }
+            setComponentZOrder(pauseFrame, 0);
+            setComponentZOrder(pauseButton, 0);
             return;
         }
         if (e instanceof ScoreEvent scoreEvent) {
@@ -180,6 +166,14 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             score.setText(Integer.toString(curScore + scoreEvent.getScore()));
             int curLines = Integer.parseInt(lines.getText());
             lines.setText(Integer.toString(curLines + scoreEvent.getLines()));
+            return;
+        }
+        switch (e.getActionCommand()) {
+            case "open menu" -> {
+                actionListeners.forEach(actionListener -> actionListener.actionPerformed(e));
+                pauseButton.doClick();
+            }
+            case "resume game" -> pauseButton.doClick();
         }
     }
 }
