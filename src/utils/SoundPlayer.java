@@ -1,5 +1,7 @@
 package utils;
 
+import dto.ApplicationData;
+
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -7,7 +9,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class SoundPlayer {
-    private static Clip backgroundMusic;
+    private static Clip menuMusic;
     private static Clip gameMusic;
 
     private static AudioInputStream createAudioInputStream(String fileName) throws UnsupportedAudioFileException, IOException {
@@ -22,8 +24,8 @@ public class SoundPlayer {
 
     private static void loadMenuMusic() {
         try {
-            backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(createAudioInputStream(ApplicationConstants.getBackgroundMusicPath()));
+            menuMusic = AudioSystem.getClip();
+            menuMusic.open(createAudioInputStream(ApplicationData.getBackgroundMusicPath()));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -32,7 +34,7 @@ public class SoundPlayer {
     private static void loadGameMusic() {
         try {
             gameMusic = AudioSystem.getClip();
-            gameMusic.open(createAudioInputStream(ApplicationConstants.getGameMusicPath()));
+            gameMusic.open(createAudioInputStream(ApplicationData.getGameMusicPath()));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -40,8 +42,8 @@ public class SoundPlayer {
 
 
     public static void playMenuMusic() {
-        if (backgroundMusic != null) {
-            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+        if (menuMusic != null) {
+            menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
@@ -52,8 +54,8 @@ public class SoundPlayer {
     }
 
     public static void stopMenuMusic() {
-        if (backgroundMusic != null && backgroundMusic.isRunning()) {
-            backgroundMusic.stop();
+        if (menuMusic != null && menuMusic.isRunning()) {
+            menuMusic.stop();
         }
     }
 
@@ -61,5 +63,15 @@ public class SoundPlayer {
         if (gameMusic != null && gameMusic.isRunning()) {
             gameMusic.stop();
         }
+    }
+
+    public static void setMenuVolume(int volume) {
+        FloatControl control = (FloatControl) menuMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(volume / 100f * 86f - 80f);
+    }
+
+    public static void setGameVolume(int volume) {
+        FloatControl control = (FloatControl) gameMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(volume / 100f * 86f - 80f);
     }
 }

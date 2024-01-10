@@ -1,10 +1,15 @@
-package utils;
+package dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
-public class ApplicationConstants {
+public class ApplicationData {
     @Getter
     private static final Dimension applicationDimension;
     @Getter
@@ -25,6 +30,9 @@ public class ApplicationConstants {
     private final static String tetrisIconPath;
     @Getter
     private final static String menuGifPath;
+    private static final ObjectMapper objectMapper;
+    private static final File file;
+    private static SavableApplicationData savableData;
 
     static {
         applicationDimension = new Dimension(420, 500);
@@ -37,5 +45,26 @@ public class ApplicationConstants {
         gameMusicPath = "../GameMusic.wav";
         tetrisIconPath = "../tetris.png";
         menuGifPath = "../MenuGif.gif";
+        objectMapper = new ObjectMapper();
+        file = new File("settings/settings.json");
+
+        load();
+    }
+
+    private static void load() {
+        try {
+            savableData = objectMapper.readValue(file, SavableApplicationData.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void save() {
+        try {
+            File file = new File("settings/settings.json");
+            objectMapper.writeValue(file, savableData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

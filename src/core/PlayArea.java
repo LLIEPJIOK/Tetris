@@ -2,7 +2,6 @@ package core;
 
 import dto.ScoreEvent;
 import org.jetbrains.annotations.NotNull;
-import utils.ApplicationConstants;
 import utils.GamePainter;
 import utils.ObjectCreator;
 
@@ -49,7 +48,6 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
         setBackground(new Color(253, 208, 59));
         setLayout(null);
-        setPreferredSize(ApplicationConstants.getApplicationDimension());
     }
 
     private void setupPauseButton() {
@@ -62,7 +60,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private void setupTextScore() {
         scoreLabel = ObjectCreator.createLabel("Score", 2, 20);
         scoreLabel.setOpaque(true);
-        scoreLabel.setBounds(240, 200, 60, 25);
+        scoreLabel.setBounds(280, 200, 60, 25);
         this.add(scoreLabel);
     }
 
@@ -70,25 +68,25 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private void setupTextLines() {
         linesLabel = ObjectCreator.createLabel("Lines", 2, 20);
         linesLabel.setOpaque(true);
-        linesLabel.setBounds(243, 270, 53, 25);
+        linesLabel.setBounds(283, 270, 53, 25);
         this.add(linesLabel);
     }
 
     private void setupScore() {
         score = ObjectCreator.createLabel("0", 0, 18);
-        score.setBounds(240, 225, 60, 25);
+        score.setBounds(280, 225, 60, 25);
         this.add(score);
     }
 
     private void setupLines() {
         lines = ObjectCreator.createLabel("0", 0, 18);
-        lines.setBounds(243, 295, 60, 25);
+        lines.setBounds(283, 295, 60, 25);
         this.add(lines);
     }
 
     private void setupField() {
         field = new Field();
-        field.setLocation(20, 30);
+        field.setLocation(60, 30);
         field.setPreferredSize(new Dimension(100, 100));
         field.addActionListener(this);
         this.add(field);
@@ -110,7 +108,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        GamePainter.paintFigure(g, field.getNextFigure(), 200, 30);
+        GamePainter.paintFigure(g, field.getNextFigure(), 210, 30);
     }
 
     @Override

@@ -3,7 +3,7 @@ import dto.Figure;
 import dto.ScoreEvent;
 import dto.Square;
 import lombok.Getter;
-import utils.ApplicationConstants;
+import dto.ApplicationData;
 import utils.GamePainter;
 
 import javax.swing.*;
@@ -27,10 +27,10 @@ public class Field extends JPanel {
     private final List<ActionListener> actionListeners;
 
     static {
-        squareSize = ApplicationConstants.getSquareSize();
-        fieldWidth = ApplicationConstants.getFieldWidth();
-        fieldHeight = ApplicationConstants.getFieldHeight();
-        timerDuration = ApplicationConstants.getTimerDuration();
+        squareSize = ApplicationData.getSquareSize();
+        fieldWidth = ApplicationData.getFieldWidth();
+        fieldHeight = ApplicationData.getFieldHeight();
+        timerDuration = ApplicationData.getTimerDuration();
     }
 
     {

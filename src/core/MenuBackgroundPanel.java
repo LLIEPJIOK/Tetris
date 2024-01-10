@@ -1,6 +1,6 @@
 package core;
 
-import utils.ApplicationConstants;
+import dto.ApplicationData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ public class MenuBackgroundPanel extends JPanel {
     public MenuBackgroundPanel() {
         setDoubleBuffered(true);
         backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource(
-                ApplicationConstants.getMenuGifPath()))).getImage();
+                ApplicationData.getMenuGifPath()))).getImage();
         setLayout(new GridBagLayout());
     }
 

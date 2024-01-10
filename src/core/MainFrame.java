@@ -1,7 +1,7 @@
 package core;
 
 import org.jetbrains.annotations.NotNull;
-import utils.ApplicationConstants;
+import dto.ApplicationData;
 import utils.SoundPlayer;
 
 import javax.swing.*;
@@ -15,27 +15,30 @@ import java.util.Objects;
 public class MainFrame extends JFrame implements ActionListener {
     private final Menu menu;
     private final PlayArea playArea;
-
+    private final Settings settings;
     private final JPanel cardPanel;
 
     {
+        SoundPlayer.loadMusic();
+
         menu = new Menu();
         menu.addActionListener(this);
-        // to remove empty space in the top
-        menu.setBorder(BorderFactory.createEmptyBorder(-5, 0, 0, 0));
 
         playArea = new PlayArea();
         playArea.addActionListener(this);
 
+        settings = new Settings();
+
         cardPanel = new JPanel(new CardLayout());
         cardPanel.add(menu, "Menu");
         cardPanel.add(playArea, "PlayArea");
+        cardPanel.add(settings, "Settings");
         this.add(cardPanel);
 
         setTitle("Tetris");
         setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource(
-                ApplicationConstants.getTetrisIconPath()))).getImage());
-        setSize(ApplicationConstants.getApplicationDimension());
+                ApplicationData.getTetrisIconPath()))).getImage());
+        setSize(ApplicationData.getApplicationDimension());
         setLocationRelativeTo(null);
         setResizable(false);
         setFocusable(true);
@@ -48,7 +51,6 @@ public class MainFrame extends JFrame implements ActionListener {
             }
         });
 
-        SoundPlayer.loadMusic();
         SoundPlayer.playMenuMusic();
     }
 
@@ -58,7 +60,7 @@ public class MainFrame extends JFrame implements ActionListener {
             case "start game" -> {
                 playArea.startGame();
                 CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
-                cardLayout.show(cardPanel, "PlayArea")  ;
+                cardLayout.show(cardPanel, "PlayArea");
                 SoundPlayer.stopMenuMusic();
                 SoundPlayer.playGameMusic();
             }
@@ -67,6 +69,10 @@ public class MainFrame extends JFrame implements ActionListener {
                 cardLayout.show(cardPanel, "Menu");
                 SoundPlayer.stopGameMusic();
                 SoundPlayer.playMenuMusic();
+            }
+            case "open settings" -> {
+                CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                cardLayout.show(cardPanel, "Settings");
             }
         }
     }

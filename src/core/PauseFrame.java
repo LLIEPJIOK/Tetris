@@ -1,7 +1,7 @@
 package core;
 
 import org.jetbrains.annotations.NotNull;
-import utils.ApplicationConstants;
+import dto.ApplicationData;
 import utils.ObjectCreator;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ public class PauseFrame extends JPanel implements ActionListener {
     private final List<ActionListener> actionListeners;
 
     {
-        setSize(ApplicationConstants.getApplicationDimension());
+        setSize(ApplicationData.getApplicationDimension());
         setLayout(null);
         setOpaque(false);
         setFocusable(false);
