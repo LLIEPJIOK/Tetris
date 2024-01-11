@@ -62,44 +62,46 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.SOUTHWEST;
         constraints.insets = new Insets(0, -10, -140, 0);
-
         mainPanel.add(backButton, constraints);
     }
 
+    private @NotNull JLabel createLabel(String text) {
+        JLabel label = ObjectCreator.createLabel(text, 0, 16);
+        label.setOpaque(true);
+        label.setPreferredSize(new Dimension(55, 20));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        return label;
+    }
+
+    private @NotNull JLabel createVolumeLabel() {
+        JLabel label = ObjectCreator.createLabel("", 0, 16);
+        label.setLocation(325, 35);
+        label.setPreferredSize(new Dimension(35, 20));
+        label.setOpaque(true);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        return label;
+    }
+
+    public Slider createSlider() {
+        Slider slider = new Slider();
+        slider.setSize(250, 20);
+        return slider;
+    }
+
     private void setupMenuSoundStuff() {
-        menuLabel = ObjectCreator.createLabel("Menu", 0, 16);
-        menuLabel.setOpaque(true);
-        menuLabel.setPreferredSize(new Dimension(55, 20));
-        menuLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        menuVolumeLabel = ObjectCreator.createLabel("", 0, 16);
-        menuVolumeLabel.setLocation(325, 35);
-        menuVolumeLabel.setPreferredSize(new Dimension(35, 20));
-        menuVolumeLabel.setOpaque(true);
-        menuVolumeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        menuVolumeSlider = new Slider();
-        menuVolumeSlider.setSize(250, 20);
+        menuLabel = createLabel("Menu");
+        menuVolumeLabel = createVolumeLabel();
+        menuVolumeSlider = createSlider();
         menuVolumeSlider.addChangeListener(this);
-        menuVolumeSlider.setValue(80);
+        menuVolumeSlider.setValue(ApplicationData.getMenuVolume());
     }
 
     private void setupGameSoundStuff() {
-        gameLabel = ObjectCreator.createLabel("Game", 0, 16);
-        gameLabel.setOpaque(true);
-        gameLabel.setPreferredSize(new Dimension(55, 20));
-        gameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        gameVolumeLabel = ObjectCreator.createLabel("", 0, 16);
-        gameVolumeLabel.setLocation(325, 35);
-        gameVolumeLabel.setPreferredSize(new Dimension(35, 20));
-        gameVolumeLabel.setOpaque(true);
-        gameVolumeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        gameVolumeSlider = new Slider();
-        gameVolumeSlider.setSize(250, 20);
+        gameLabel = createLabel("Game");
+        gameVolumeLabel = createVolumeLabel();
+        gameVolumeSlider = createSlider();
         gameVolumeSlider.addChangeListener(this);
-        gameVolumeSlider.setValue(80);
+        gameVolumeSlider.setValue(ApplicationData.getGameVolume());
     }
 
     private void setupBackButton() {
@@ -124,6 +126,9 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
     @Override
     public void actionPerformed(@NotNull ActionEvent e) {
         if (e.getSource() == backButton) {
+            ApplicationData.setMenuVolume(menuVolumeSlider.getValue());
+            ApplicationData.setGameVolume(gameVolumeSlider.getValue());
+
             ActionEvent actionEvent = new ActionEvent(this, 1, "show setting");
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
         }

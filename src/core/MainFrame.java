@@ -28,6 +28,7 @@ public class MainFrame extends JFrame implements ActionListener {
         playArea.addActionListener(this);
 
         settings = new Settings();
+        settings.addActionListener(this);
 
         cardPanel = new JPanel(new CardLayout());
         cardPanel.add(menu, "Menu");
@@ -73,6 +74,16 @@ public class MainFrame extends JFrame implements ActionListener {
             case "open settings" -> {
                 CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
                 cardLayout.show(cardPanel, "Settings");
+                if (e.getSource() == menu) {
+                    settings.setCommand("open menu");
+                } else {
+                    settings.setCommand("return game");
+                }
+            }
+            case "return game" -> {
+                CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                cardLayout.show(cardPanel, "PlayArea");
+                playArea.returnToGame();
             }
         }
     }

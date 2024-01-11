@@ -21,7 +21,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private PauseFrame pauseFrame;
     private final List<ActionListener> actionListeners;
     private final Timer pauseKeyTimer;
-    private boolean isGameStarted;
+    private boolean handleKeys;
 
     {
         setupMainPanel();
@@ -30,7 +30,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             Timer timer = (Timer) e.getSource();
             timer.stop();
         });
-        isGameStarted = false;
+        handleKeys = false;
     }
 
     public void addActionListener(ActionListener actionListener) {
@@ -102,7 +102,11 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     public void startGame() {
         field.startNewGame();
-        isGameStarted = true;
+        handleKeys = true;
+    }
+
+    public void returnToGame() {
+        handleKeys = true;
     }
 
     @Override
@@ -113,7 +117,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(@NotNull KeyEvent e) {
-        if (!isGameStarted) {
+        if (!handleKeys) {
             return;
         }
         int keyCode = e.getKeyCode();
@@ -170,6 +174,10 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             case "open menu" -> {
                 actionListeners.forEach(actionListener -> actionListener.actionPerformed(e));
                 pauseButton.doClick();
+            }
+            case "open settings" -> {
+                actionListeners.forEach(actionListener -> actionListener.actionPerformed(e));
+                handleKeys = false;
             }
             case "resume game" -> pauseButton.doClick();
         }

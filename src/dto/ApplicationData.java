@@ -1,13 +1,11 @@
 package dto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class ApplicationData {
     @Getter
@@ -46,9 +44,25 @@ public class ApplicationData {
         tetrisIconPath = "../tetris.png";
         menuGifPath = "../MenuGif.gif";
         objectMapper = new ObjectMapper();
-        file = new File("settings/settings.json");
+        file = new File("src/settings/settings.json");
 
         load();
+    }
+
+    public static int getMenuVolume() {
+        return savableData.getMenuVolume();
+    }
+
+    public static int getGameVolume() {
+        return savableData.getGameVolume();
+    }
+
+    public static void setMenuVolume(int volume) {
+        savableData.setMenuVolume(volume);
+    }
+
+    public static void setGameVolume(int volume) {
+        savableData.setGameVolume(volume);
     }
 
     private static void load() {
@@ -61,7 +75,6 @@ public class ApplicationData {
 
     public static void save() {
         try {
-            File file = new File("settings/settings.json");
             objectMapper.writeValue(file, savableData);
         } catch (IOException e) {
             e.printStackTrace();
