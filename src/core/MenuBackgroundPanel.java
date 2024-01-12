@@ -47,9 +47,9 @@ public class MenuBackgroundPanel extends JPanel {
         g2d.translate((ApplicationData.getApplicationDimension().width - width) / 2, 40);
         g2d.rotate(-Math.PI / 20);
         g2d.setFont(font);
-        g2d.setColor(new Color(255, 164, 60));
+        g2d.setColor(new Color(82, 13, 48));
         g2d.drawString(text, 3, 33);
-        g2d.setColor(new Color(243, 71, 35));
+        g2d.setColor(new Color(206, 27, 92));
         g2d.drawString(text, 0, 30);
         g2d.setTransform(oldTransform);
     }

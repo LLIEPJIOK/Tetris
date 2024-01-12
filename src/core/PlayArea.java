@@ -5,11 +5,16 @@ import org.jetbrains.annotations.NotNull;
 import utils.GamePainter;
 import utils.ObjectCreator;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private Field field;
@@ -19,6 +24,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private JLabel scoreLabel;
     private PauseButton pauseButton;
     private PausePanel pausePanel;
+    private static BufferedImage image;
     private final List<ActionListener> actionListeners;
     private final Timer pauseKeyTimer;
     private boolean handleKeys;
@@ -26,6 +32,11 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     {
         setupMainPanel();
         actionListeners = new ArrayList<>();
+        try {
+            image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../BetaBackground.jpg")).getFile()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         pauseKeyTimer = new Timer(50, e -> {
             Timer timer = (Timer) e.getSource();
             timer.stop();
@@ -46,7 +57,6 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         setupField();
         setupPauseFrame();
 
-        setBackground(new Color(253, 208, 59));
         setLayout(null);
     }
 
@@ -113,6 +123,12 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     public void paint(Graphics g) {
         super.paint(g);
         GamePainter.paintFigure(g, field.getNextFigure(), 220, 30);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
     }
 
     @Override

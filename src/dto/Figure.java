@@ -14,6 +14,7 @@ public class Figure {
     private final static Random rnd;
     private Square[] squares;
     private int type;
+    private int color;
 
     /*
      * Template for figures:
@@ -67,6 +68,7 @@ public class Figure {
         int rotations = rnd.nextInt(4);
         IntStream.range(0, rotations).forEach(i -> squares = rotateRight());
         putOnTop();
+        color = rnd.nextInt(3) + 1;
     }
 
     private Square @NotNull [] squareArrayCopy(Square @NotNull [] squares) {
@@ -127,5 +129,6 @@ public class Figure {
     public static void copy(@NotNull Figure src, @NotNull Figure dest) {
         System.arraycopy(src.squares, 0, dest.squares, 0, 4);
         dest.type = src.type;
+        dest.color = src.color;
     }
 }

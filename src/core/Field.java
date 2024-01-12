@@ -7,13 +7,18 @@ import lombok.Getter;
 import dto.ApplicationData;
 import utils.GamePainter;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Field extends JPanel {
     private final static int squareSize;
@@ -25,6 +30,7 @@ public class Field extends JPanel {
     @Getter
     private Figure nextFigure;
     private final Timer timer;
+    private static BufferedImage image;
     private final List<ActionListener> actionListeners;
 
     static {
@@ -32,6 +38,12 @@ public class Field extends JPanel {
         fieldWidth = ApplicationData.getFieldWidth();
         fieldHeight = ApplicationData.getFieldHeight();
         timerDuration = ApplicationData.getTimerDuration();
+
+        try {
+            image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../GameBackground.jpg")).getFile()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     {
@@ -71,8 +83,8 @@ public class Field extends JPanel {
                         spaces[square.getY()][square.getX()] != 0);
     }
 
-    private void saveInField(Square[] squares) {
-        Arrays.stream(squares).forEach(square -> spaces[square.getY()][square.getX()] = 1);
+    private void saveInField(Square[] squares, int color) {
+        Arrays.stream(squares).forEach(square -> spaces[square.getY()][square.getX()] = color);
     }
 
     private void clearLine(int id) {
@@ -108,7 +120,7 @@ public class Field extends JPanel {
     }
 
     public void handleFigureLanding() {
-        saveInField(curFigure.getSquares());
+        saveInField(curFigure.getSquares(), curFigure.getColor());
         clearFullLines();
         Figure.copy(nextFigure, curFigure);
         nextFigure.generateFigure(fieldWidth / 2 - 1);
@@ -169,7 +181,7 @@ public class Field extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        super.paintComponent(g);
+        super.paint(g);
 
         g.setColor(Color.BLACK);
         g.drawRect(0, 0, fieldWidth * squareSize, fieldHeight * squareSize);
@@ -178,9 +190,15 @@ public class Field extends JPanel {
         for (int i = 0; i < fieldHeight; ++i) {
             for (int j = 0; j < fieldWidth; ++j) {
                 if (spaces[i][j] != 0) {
-                    GamePainter.paintSquare(g, j, i);
+                    GamePainter.paintSquare(g, j, i, spaces[i][j]);
                 }
             }
         }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
     }
 }
