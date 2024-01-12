@@ -44,13 +44,13 @@ public class MainFrame extends JFrame implements ActionListener {
         setResizable(false);
         setFocusable(true);
         requestFocusInWindow();
-        addKeyListener(playArea);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         });
+        addKeyListener(playArea);
 
         SoundPlayer.playMenuMusic();
     }

@@ -5,7 +5,7 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 
 public class SliderUI extends BasicSliderUI {
-    public SliderUI(Slider slider) {
+    public SliderUI(JSlider slider) {
         super(slider);
     }
 

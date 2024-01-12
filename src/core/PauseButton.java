@@ -50,7 +50,7 @@ public class PauseButton extends JButton {
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        g2d.setColor(Color.WHITE);
+        g2d.setColor(Color.BLACK);
         g2d.translate(12, 12);
         g2d.rotate(degrees);
         g2d.fillRoundRect(-12, -9, 24, 4, 4, 4);

@@ -18,7 +18,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private JLabel linesLabel;
     private JLabel scoreLabel;
     private PauseButton pauseButton;
-    private PauseFrame pauseFrame;
+    private PausePanel pausePanel;
     private final List<ActionListener> actionListeners;
     private final Timer pauseKeyTimer;
     private boolean handleKeys;
@@ -93,11 +93,11 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     }
 
     private void setupPauseFrame() {
-        pauseFrame = new PauseFrame();
-        pauseFrame.setVisible(false);
-        pauseFrame.addActionListener(this);
-        setComponentZOrder(pauseFrame, 0);
-        this.add(pauseFrame);
+        pausePanel = new PausePanel();
+        pausePanel.setVisible(false);
+        pausePanel.addActionListener(this);
+        setComponentZOrder(pausePanel, 0);
+        this.add(pausePanel);
     }
 
     public void startGame() {
@@ -112,7 +112,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        GamePainter.paintFigure(g, field.getNextFigure(), 210, 30);
+        GamePainter.paintFigure(g, field.getNextFigure(), 220, 30);
     }
 
     @Override
@@ -133,9 +133,9 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
                 case KeyEvent.VK_D -> field.moveRight();
                 case KeyEvent.VK_E -> field.rotateLeft();
                 case KeyEvent.VK_R -> field.rotateRight();
-                case KeyEvent.VK_SPACE -> field.fallDown();
+                case KeyEvent.VK_SPACE -> field.drop();
             }
-            repaint();
+            field.repaint();
         }
     }
 
@@ -153,13 +153,13 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     public void actionPerformed(@NotNull ActionEvent e) {
         if (e.getSource() == pauseButton) {
             pauseButton.changeType();
-            pauseFrame.setVisible(pauseButton.getType() == 1);
+            pausePanel.setVisible(pauseButton.getType() == 1);
             if (pauseButton.getType() == 0) {
                 field.resumeGame();
             } else {
                 field.pauseGame();
             }
-            setComponentZOrder(pauseFrame, 0);
+            setComponentZOrder(pausePanel, 0);
             setComponentZOrder(pauseButton, 0);
             return;
         }
@@ -180,6 +180,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
                 handleKeys = false;
             }
             case "resume game" -> pauseButton.doClick();
+            case "repaint" -> repaint();
         }
     }
 }

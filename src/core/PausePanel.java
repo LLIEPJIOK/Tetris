@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PauseFrame extends JPanel implements ActionListener {
+public class PausePanel extends JPanel implements ActionListener {
     private final JButton resumeButton;
     private final JButton settingsButton;
     private final JButton menuButton;

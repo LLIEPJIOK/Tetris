@@ -18,6 +18,7 @@ public class Settings extends JPanel implements ActionListener {
     private JButton controlsButton;
     private JButton backButton;
     private SoundPanel soundPanel;
+    private ControlsPanel controlsPanel;
     private final JPanel cardPanel;
     private final Color buttonColor;
     @Setter
@@ -33,11 +34,13 @@ public class Settings extends JPanel implements ActionListener {
         actionListeners = new ArrayList<>();
 
         setupMainPanel();
-        setupMusicVolumePanel();
+        setupSoundPanel();
+        setupControlsPanel();
 
         cardPanel = new JPanel(new CardLayout());
         cardPanel.add(mainPanel, "Main");
         cardPanel.add(soundPanel, "Sound");
+        cardPanel.add(controlsPanel, "Controls");
         this.add(cardPanel);
     }
 
@@ -46,7 +49,7 @@ public class Settings extends JPanel implements ActionListener {
     }
 
     private void setupMainPanel() {
-        mainPanel = new MenuBackgroundPanel();
+        mainPanel = new MenuBackgroundPanel("Settings");
         mainPanel.setPreferredSize(ApplicationData.getApplicationDimension());
 
         setupSoundButton();
@@ -60,7 +63,7 @@ public class Settings extends JPanel implements ActionListener {
         constraints.gridx = 1;
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.SOUTHWEST;
-        constraints.insets = new Insets(0, -100, -110, 0);
+        constraints.insets = new Insets(0, -105, -120, 0);
         mainPanel.add(backButton, constraints);
     }
 
@@ -82,10 +85,14 @@ public class Settings extends JPanel implements ActionListener {
         backButton.addActionListener(this);
     }
 
-    private void setupMusicVolumePanel() {
+    private void setupSoundPanel() {
         soundPanel = new SoundPanel();
-        soundPanel.setVisible(false);
         soundPanel.addActionListener(this);
+    }
+
+    private void setupControlsPanel() {
+        controlsPanel = new ControlsPanel();
+        controlsPanel.addActionListener(this);
     }
 
     @Override
@@ -95,10 +102,16 @@ public class Settings extends JPanel implements ActionListener {
             cardLayout.show(cardPanel, "Sound");
             return;
         }
+        if (e.getSource() == controlsButton) {
+            CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+            cardLayout.show(cardPanel, "Controls");
+            return;
+        }
         if (e.getSource() == backButton) {
             ApplicationData.save();
             ActionEvent actionEvent = new ActionEvent(this, 1, command);
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
+            return;
         }
         if (e.getActionCommand().equals("show setting")) {
             CardLayout cardLayout = (CardLayout) cardPanel.getLayout();

@@ -16,10 +16,10 @@ import java.util.List;
 
 public class SoundPanel extends JPanel implements ChangeListener, ActionListener {
     private MenuBackgroundPanel mainPanel;
-    private Slider menuVolumeSlider;
+    private JSlider menuVolumeSlider;
     private JLabel menuVolumeLabel;
     private JLabel menuLabel;
-    private Slider gameVolumeSlider;
+    private JSlider gameVolumeSlider;
     private JLabel gameVolumeLabel;
     private JLabel gameLabel;
     private JButton backButton;
@@ -42,7 +42,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
     }
 
     private void setupMainPanel() {
-        mainPanel = new MenuBackgroundPanel();
+        mainPanel = new MenuBackgroundPanel("Sound");
         mainPanel.setPreferredSize(ApplicationData.getApplicationDimension());
 
         setupMenuSoundStuff();
@@ -61,7 +61,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.SOUTHWEST;
-        constraints.insets = new Insets(0, -10, -140, 0);
+        constraints.insets = new Insets(0, -25, -150, 0);
         mainPanel.add(backButton, constraints);
     }
 
@@ -82,9 +82,13 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
         return label;
     }
 
-    public Slider createSlider() {
-        Slider slider = new Slider();
-        slider.setSize(250, 20);
+    public JSlider createSlider() {
+        JSlider slider = new JSlider();
+        slider.setPreferredSize(new Dimension(200, 20));
+        slider.setUI(new SliderUI(slider));
+        slider.setBackground(new Color(180, 180, 180));
+        slider.setForeground(new Color(0xFFE3C755, true));
+        slider.setOpaque(false);
         return slider;
     }
 

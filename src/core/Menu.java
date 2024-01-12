@@ -40,8 +40,14 @@ public class Menu extends JPanel {
         createSettingsButton();
         createExitButton();
 
-        mainPanel = new MenuBackgroundPanel();
-        mainPanel.add(start, 1, 1);
+        mainPanel = new MenuBackgroundPanel("Tetris");
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.insets = new Insets(30, 0, 30, 0);
+
+        mainPanel.add(start, constraints);
         mainPanel.add(records, 1, 2);
         mainPanel.add(settings, 1, 3);
         mainPanel.add(exit, 1, 4);

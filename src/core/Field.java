@@ -1,4 +1,5 @@
 package core;
+
 import dto.Figure;
 import dto.ScoreEvent;
 import dto.Square;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Getter
 public class Field extends JPanel {
     private final static int squareSize;
     private final static int fieldWidth;
@@ -22,6 +22,7 @@ public class Field extends JPanel {
     private final static int timerDuration;
     private int[][] spaces;
     private Figure curFigure;
+    @Getter
     private Figure nextFigure;
     private final Timer timer;
     private final List<ActionListener> actionListeners;
@@ -111,6 +112,8 @@ public class Field extends JPanel {
         clearFullLines();
         Figure.copy(nextFigure, curFigure);
         nextFigure.generateFigure(fieldWidth / 2 - 1);
+        ActionEvent actionEvent = new ActionEvent(this, 1, "repaint");
+        notifyListeners(actionEvent);
     }
 
     public void moveLeft() {
@@ -156,7 +159,7 @@ public class Field extends JPanel {
         }
     }
 
-    public void fallDown() {
+    public void drop() {
         do {
             curFigure.moveDown();
         } while (isInEmptySpace(curFigure.getSquares()));

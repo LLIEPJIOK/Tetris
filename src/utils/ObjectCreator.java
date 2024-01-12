@@ -16,7 +16,7 @@ public class ObjectCreator {
         Font font = new Font("Arial", Font.BOLD, fontSize);
         button.setFont(font);
         button.setBackground(color);
-        button.setForeground(new Color(0, 0, 0, 255));
+        button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
         return button;
     }
