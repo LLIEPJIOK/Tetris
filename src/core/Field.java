@@ -183,10 +183,7 @@ public class Field extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.setColor(Color.BLACK);
-        g.drawRect(0, 0, fieldWidth * squareSize, fieldHeight * squareSize);
-
-        GamePainter.paintFigure(g, curFigure, 0, 0);
+        GamePainter.paintCurFigure(g, curFigure, 0, 0);
         for (int i = 0; i < fieldHeight; ++i) {
             for (int j = 0; j < fieldWidth; ++j) {
                 if (spaces[i][j] != 0) {

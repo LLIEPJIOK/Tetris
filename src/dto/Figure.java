@@ -44,17 +44,37 @@ public class Figure {
     }
 
     private void putOnTop() {
-        int mn = Integer.MAX_VALUE;
+        int mnY = Integer.MAX_VALUE;
         for (Square square : squares) {
-            mn = Math.min(mn, square.getY());
+            mnY = Math.min(mnY, square.getY());
         }
-        while (mn > 0) {
+        while (mnY > 0) {
             moveUp();
-            --mn;
+            --mnY;
         }
-        while (mn < 0) {
+        while (mnY < 0) {
             moveDown();
-            ++mn;
+            ++mnY;
+        }
+    }
+
+    private void putInCenter(int center) {
+        int mnX = Integer.MAX_VALUE;
+        int mxX = Integer.MIN_VALUE;
+        for (Square square : getSquares()) {
+            mnX = Math.min(mnX, square.getX());
+            mxX = Math.max(mxX, square.getX());
+        }
+        if (mxX - mnX > 1) {
+            ++mnX;
+        }
+        while (mnX < center) {
+            moveRight();
+            ++mnX;
+        }
+        while (mnX > center) {
+            moveLeft();
+            --mnX;
         }
     }
 
@@ -68,6 +88,7 @@ public class Figure {
         int rotations = rnd.nextInt(4);
         IntStream.range(0, rotations).forEach(i -> squares = rotateRight());
         putOnTop();
+        putInCenter(offset);
         color = rnd.nextInt(7) + 1;
     }
 

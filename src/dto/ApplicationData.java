@@ -16,6 +16,8 @@ public class ApplicationData {
     @Getter
     private final static int squareSize;
     @Getter
+    private final static int nextFigureSquareSize;
+    @Getter
     private final static int fieldWidth;
     @Getter
     private final static int fieldHeight;
@@ -48,6 +50,7 @@ public class ApplicationData {
     static {
         applicationDimension = new Dimension(420, 500);
         squareSize = 20;
+        nextFigureSquareSize = 14;
         fieldWidth = 10;
         fieldHeight = 20;
         timerDuration = 500;

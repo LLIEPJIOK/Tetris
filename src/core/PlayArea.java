@@ -38,7 +38,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         keyCommands = ApplicationData.getKeysCommands();
         actionListeners = new ArrayList<>();
         try {
-            image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../BetaBackground.jpg")).getFile()));
+            image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../PlayAreaBackground.png")).getFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     private void setupField() {
         field = new Field();
-        field.setLocation(60, 30);
+        field.setLocation(59, 30);
         field.setPreferredSize(new Dimension(100, 100));
         field.addActionListener(this);
         this.add(field);
@@ -127,7 +127,9 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        GamePainter.paintFigure(g, field.getNextFigure(), 220, 30);
+        GamePainter.paintNextFigure(g, field.getNextFigure(), 342, 70);
+//        g.setColor(Color.BLUE);
+//        g.fillRect(302, 30, 80, 80);
         super.paintChildren(g);
     }
 

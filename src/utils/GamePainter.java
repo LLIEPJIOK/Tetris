@@ -2,6 +2,7 @@ package utils;
 
 import dto.ApplicationData;
 import dto.Figure;
+import dto.Square;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -14,11 +15,13 @@ import java.util.Objects;
 
 public class GamePainter {
     private final static int squareSize;
+    private final static int nextFigureSquareSize;
     private static BufferedImage[] images;
     private static final String[] cubeColors;
 
     static {
         squareSize = ApplicationData.getSquareSize();
+        nextFigureSquareSize = ApplicationData.getNextFigureSquareSize();
         cubeColors = new String[]{"Green", "Red", "Yellow", "Purple", "Blue", "Orange", "Turquoise"};
         try {
             images = new BufferedImage[cubeColors.length];
@@ -34,13 +37,31 @@ public class GamePainter {
         g.drawImage(images[color - 1],x * squareSize, y * squareSize, squareSize, squareSize, null);
     }
 
-    public static void paintSquare(@NotNull Graphics g, int x, int y, int dx, int dy, int color) {
-        g.drawImage(images[color - 1],x * squareSize + dx, y * squareSize + dy, squareSize, squareSize, null);
+    public static void paintSquare(@NotNull Graphics g, int x, int y, int dx, int dy, int size, int color) {
+        g.drawImage(images[color - 1],x * size + dx, y * size + dy, size, size, null);
     }
 
-    public static void paintFigure(Graphics g, @NotNull Figure figure, int dx, int dy) {
+    public static void paintCurFigure(Graphics g, @NotNull Figure figure, int dx, int dy) {
         Arrays.stream(figure.getSquares()).forEach(square ->
-                paintSquare(g, square.getX(), square.getY(), dx, dy, figure.getColor()));
+                paintSquare(g, square.getX(), square.getY(), dx, dy, squareSize, figure.getColor()));
+    }
+
+    public static void paintNextFigure(Graphics g, @NotNull Figure figure, int dx, int dy) {
+        int mnY = Integer.MAX_VALUE;
+        int mxY = Integer.MIN_VALUE;
+        int mnX = Integer.MAX_VALUE;
+        int mxX = Integer.MIN_VALUE;
+        for (Square square : figure.getSquares()) {
+            mnY = Math.min(mnY, square.getY());
+            mxY = Math.max(mxY, square.getY());
+            mnX = Math.min(mnX, square.getX());
+            mxX = Math.max(mxX, square.getX());
+        }
+        dx -= (mxX - mnX + 1) * nextFigureSquareSize / 2;
+        dy -= (mxY - mnY + 1) * nextFigureSquareSize / 2;
+        for (Square square : figure.getSquares()) {
+            paintSquare(g, square.getX() - mnX, square.getY(), dx, dy, nextFigureSquareSize, figure.getColor());
+        }
     }
 
     public static void paintUnderFrame(@NotNull Graphics g, int frameWidth, int frameHeight,
