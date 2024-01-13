@@ -112,6 +112,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
         backButton = ObjectCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
         backButton.setPreferredSize(new Dimension(55, 25));
         backButton.addActionListener(this);
+        backButton.removeActionListener(ApplicationData.getButtonClickPlayer());
     }
 
     @Override
@@ -130,6 +131,8 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
     @Override
     public void actionPerformed(@NotNull ActionEvent e) {
         if (e.getSource() == backButton) {
+            SoundPlayer.playPressedBackButtonMusic();
+
             ApplicationData.setMenuVolume(menuVolumeSlider.getValue());
             ApplicationData.setGameVolume(gameVolumeSlider.getValue());
 

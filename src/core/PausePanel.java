@@ -2,6 +2,7 @@ package core;
 
 import org.jetbrains.annotations.NotNull;
 import dto.ApplicationData;
+import utils.GamePainter;
 import utils.ObjectCreator;
 
 import javax.swing.*;
@@ -50,16 +51,7 @@ public class PausePanel extends JPanel implements ActionListener {
     public void paint(Graphics g) {
         super.paintComponent(g);
 
-        g.setColor(new Color(0, 0, 0, 100));
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(new Color(220, 220, 220));
-        g2d.fillRect(85, 105, 250, 250);
-
-        g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.drawRect(85, 105, 250, 250);
+        GamePainter.paintUnderFrame(g, getWidth(), getHeight(), 250, 250);
 
         super.paintChildren(g);
     }

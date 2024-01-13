@@ -2,6 +2,7 @@ package core;
 
 import dto.ApplicationData;
 import utils.ObjectCreator;
+import utils.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,9 +59,11 @@ public class Menu extends JPanel {
         start = ObjectCreator.createButton("Start", buttonColor, 4, 26);
         start.setPreferredSize(new Dimension(150, 50));
         start.addActionListener(e -> {
+            SoundPlayer.playPressedStartButtonMusic();
             ActionEvent actionEvent = new ActionEvent(this, 1, "start game");
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
         });
+        start.removeActionListener(ApplicationData.getButtonClickPlayer());
     }
 
     private void createRecordsButton() {

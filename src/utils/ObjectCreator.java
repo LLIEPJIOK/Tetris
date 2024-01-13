@@ -1,11 +1,14 @@
 package utils;
 
+import dto.ApplicationData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ObjectCreator {
     public static @NotNull JButton createButton(String text, Color color,
@@ -18,6 +21,13 @@ public class ObjectCreator {
         button.setBackground(color);
         button.setForeground(Color.BLACK);
         button.setFocusPainted(false);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                SoundPlayer.playHoverButtonMusic();
+            }
+        });
+        button.addActionListener(ApplicationData.getButtonClickPlayer());
         return button;
     }
 

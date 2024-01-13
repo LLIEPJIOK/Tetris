@@ -1,5 +1,6 @@
 package core;
 
+import dto.ApplicationData;
 import dto.ScoreEvent;
 import org.jetbrains.annotations.NotNull;
 import utils.GamePainter;
@@ -13,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,12 +27,15 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private PauseButton pauseButton;
     private PausePanel pausePanel;
     private static BufferedImage image;
+    private final HashMap<Integer, String> keyCommands;
     private final List<ActionListener> actionListeners;
     private final Timer pauseKeyTimer;
     private boolean handleKeys;
 
     {
         setupMainPanel();
+
+        keyCommands = ApplicationData.getKeysCommands();
         actionListeners = new ArrayList<>();
         try {
             image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../BetaBackground.jpg")).getFile()));
@@ -123,6 +128,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     public void paint(Graphics g) {
         super.paint(g);
         GamePainter.paintFigure(g, field.getNextFigure(), 220, 30);
+        super.paintChildren(g);
     }
 
     @Override
@@ -133,23 +139,23 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(@NotNull KeyEvent e) {
-        if (!handleKeys) {
+        if (!handleKeys || !keyCommands.containsKey(e.getKeyCode())) {
             return;
         }
-        int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_ESCAPE) {
+        String command = keyCommands.get(e.getKeyCode());
+        if (command.equals("Pause/Resume")) {
             if (!pauseKeyTimer.isRunning()) {
                 pauseButton.doClick();
                 pauseKeyTimer.start();
             }
         } else if (pauseButton.getType() == 0) {
-            switch (keyCode) {
-                case KeyEvent.VK_A -> field.moveLeft();
-                case KeyEvent.VK_S -> field.moveDown();
-                case KeyEvent.VK_D -> field.moveRight();
-                case KeyEvent.VK_E -> field.rotateLeft();
-                case KeyEvent.VK_R -> field.rotateRight();
-                case KeyEvent.VK_SPACE -> field.drop();
+            switch (command) {
+                case "Move left" -> field.moveLeft();
+                case "Move down" -> field.moveDown();
+                case "Move right" -> field.moveRight();
+                case "Rotate left" -> field.rotateLeft();
+                case "Rotate right" -> field.rotateRight();
+                case "Drop" -> field.drop();
             }
             field.repaint();
         }

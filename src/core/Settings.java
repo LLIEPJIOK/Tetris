@@ -1,9 +1,11 @@
 package core;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import dto.ApplicationData;
 import utils.ObjectCreator;
+import utils.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +20,7 @@ public class Settings extends JPanel implements ActionListener {
     private JButton controlsButton;
     private JButton backButton;
     private SoundPanel soundPanel;
+    @Getter
     private ControlsPanel controlsPanel;
     private final JPanel cardPanel;
     private final Color buttonColor;
@@ -83,6 +86,7 @@ public class Settings extends JPanel implements ActionListener {
         backButton = ObjectCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
         backButton.setPreferredSize(new Dimension(55, 25));
         backButton.addActionListener(this);
+        backButton.removeActionListener(ApplicationData.getButtonClickPlayer());
     }
 
     private void setupSoundPanel() {
@@ -108,6 +112,8 @@ public class Settings extends JPanel implements ActionListener {
             return;
         }
         if (e.getSource() == backButton) {
+            SoundPlayer.playPressedBackButtonMusic();
+
             ApplicationData.save();
             ActionEvent actionEvent = new ActionEvent(this, 1, command);
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));

@@ -51,6 +51,8 @@ public class MainFrame extends JFrame implements ActionListener {
             }
         });
         addKeyListener(playArea);
+        addKeyListener(settings.getControlsPanel());
+        setFocusTraversalKeysEnabled(false);
 
         SoundPlayer.playMenuMusic();
     }
