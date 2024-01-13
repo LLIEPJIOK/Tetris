@@ -22,6 +22,9 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
     private JSlider gameVolumeSlider;
     private JLabel gameVolumeLabel;
     private JLabel gameLabel;
+    private JSlider effectsVolumeSlider;
+    private JLabel effectsVolumeLabel;
+    private JLabel effectsLabel;
     private JButton backButton;
     private final List<ActionListener> actionListeners;
 
@@ -47,6 +50,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
 
         setupMenuSoundStuff();
         setupGameSoundStuff();
+        setupEffectsSoundStuff();
         setupBackButton();
 
         mainPanel.add(menuLabel, 0, 0);
@@ -57,11 +61,15 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
         mainPanel.add(gameVolumeSlider, 1, 1);
         mainPanel.add(gameVolumeLabel, 2, 1);
 
+        mainPanel.add(effectsLabel, 0, 2);
+        mainPanel.add(effectsVolumeSlider, 1,  2);
+        mainPanel.add(effectsVolumeLabel, 2, 2);
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.SOUTHWEST;
-        constraints.insets = new Insets(0, -25, -150, 0);
+        constraints.insets = new Insets(0, -25, -125, 0);
         mainPanel.add(backButton, constraints);
     }
 
@@ -108,6 +116,14 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
         gameVolumeSlider.setValue(ApplicationData.getGameVolume());
     }
 
+    private void setupEffectsSoundStuff() {
+        effectsLabel = createLabel("Effects");
+        effectsVolumeLabel = createVolumeLabel();
+        effectsVolumeSlider = createSlider();
+        effectsVolumeSlider.addChangeListener(this);
+        effectsVolumeSlider.setValue(ApplicationData.getEffectsVolume());
+    }
+
     private void setupBackButton() {
         backButton = ObjectCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
         backButton.setPreferredSize(new Dimension(55, 25));
@@ -125,6 +141,11 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
         if (e.getSource() == gameVolumeSlider) {
             gameVolumeLabel.setText(Integer.toString(gameVolumeSlider.getValue()));
             SoundPlayer.setGameVolume(gameVolumeSlider.getValue());
+            return;
+        }
+        if (e.getSource() == effectsVolumeSlider) {
+            effectsVolumeLabel.setText(Integer.toString(effectsVolumeSlider.getValue()));
+            SoundPlayer.setEffectsVolume(effectsVolumeSlider.getValue());
         }
     }
 
@@ -135,6 +156,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
 
             ApplicationData.setMenuVolume(menuVolumeSlider.getValue());
             ApplicationData.setGameVolume(gameVolumeSlider.getValue());
+            ApplicationData.setEffectsVolume(effectsVolumeSlider.getValue());
 
             ActionEvent actionEvent = new ActionEvent(this, 1, "show setting");
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));

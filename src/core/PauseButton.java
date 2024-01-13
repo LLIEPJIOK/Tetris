@@ -1,9 +1,13 @@
 package core;
 
+import dto.ApplicationData;
 import lombok.Getter;
+import utils.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @Getter
 public class PauseButton extends JButton {
@@ -17,6 +21,13 @@ public class PauseButton extends JButton {
         setSize(24, 24);
         setOpaque(false);
         setFocusable(false);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                SoundPlayer.playHoverButtonMusic();
+            }
+        });
+        addActionListener(ApplicationData.getButtonClickPlayer());
 
         type = 0;
         d = 1;

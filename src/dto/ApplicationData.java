@@ -80,6 +80,10 @@ public class ApplicationData {
         return savableData.getGameVolume();
     }
 
+    public static int getEffectsVolume() {
+        return savableData.getEffectsVolume();
+    }
+
     public static HashMap<Integer, String> getKeysCommands() {
         return savableData.getKeysCommands();
     }
@@ -94,6 +98,10 @@ public class ApplicationData {
 
     public static void setGameVolume(int volume) {
         savableData.setGameVolume(volume);
+    }
+
+    public static void setEffectsVolume(int volume) {
+        savableData.setEffectsVolume(volume);
     }
 
     private static void load() {

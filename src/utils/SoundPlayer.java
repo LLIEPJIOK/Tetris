@@ -155,12 +155,19 @@ public class SoundPlayer {
     }
 
     public static void setMenuVolume(int volume) {
+        FloatControl control = (FloatControl) menuMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(volume / 100f * 86f - 80f);
+    }
+
+    public static void setGameVolume(int volume) {
+        FloatControl control = (FloatControl) gameMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(volume / 100f * 86f - 80f);
+    }
+
+    public static void setEffectsVolume(int volume) {
         float value = volume / 100f * 86f - 80f;
 
-        FloatControl control = (FloatControl) menuMusic.getControl(FloatControl.Type.MASTER_GAIN);
-        control.setValue(value);
-
-        control = (FloatControl) usedKeyMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        FloatControl control = (FloatControl) usedKeyMusic.getControl(FloatControl.Type.MASTER_GAIN);
         control.setValue(value);
 
         control = (FloatControl) hoverButtonMusic.getControl(FloatControl.Type.MASTER_GAIN);
@@ -174,10 +181,5 @@ public class SoundPlayer {
 
         control = (FloatControl) pressedBackButtonMusic.getControl(FloatControl.Type.MASTER_GAIN);
         control.setValue(value);
-    }
-
-    public static void setGameVolume(int volume) {
-        FloatControl control = (FloatControl) gameMusic.getControl(FloatControl.Type.MASTER_GAIN);
-        control.setValue(volume / 100f * 86f - 80f);
     }
 }

@@ -127,6 +127,7 @@ public class ControlsPanel extends JPanel implements ActionListener, KeyListener
         if (changeControlPanel.isVisible()) {
             if (e.getKeyCode() != item.getKey() && keysCommands.containsKey(e.getKeyCode())) {
                 SoundPlayer.playUsedKeyMusic();
+                changeControlPanel.usedButtonClicked();
             } else {
                 changeControlPanel.setKey(e.getKeyCode());
             }

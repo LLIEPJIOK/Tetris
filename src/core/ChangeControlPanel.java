@@ -21,6 +21,10 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
     private final Font font;
     private String name;
     private int width;
+    private final Font usedKeyFont;
+    private final String usedButtonText;
+    private final int usedButtonWidth;
+    private boolean isUsedButtonClicked;
     private final List<ActionListener> actionListeners;
 
     {
@@ -37,6 +41,12 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
         font = new Font("Arial", Font.BOLD, 25);
         name = "";
 
+        usedKeyFont = new Font("Arial", Font.PLAIN, 14);
+        usedButtonText = "This key is already in use!";
+        usedButtonWidth = getFontMetrics(usedKeyFont).stringWidth(usedButtonText);
+
+        isUsedButtonClicked = false;
+
         actionListeners = new ArrayList<>();
     }
 
@@ -52,6 +62,7 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
     public void setKey(int key) {
         this.key = key;
         this.keyLabel.setText(KeyEvent.getKeyText(key));
+        isUsedButtonClicked = false;
     }
 
     private void setupKeyLabel() {
@@ -76,6 +87,10 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
         this.add(cancelButton);
     }
 
+    public void usedButtonClicked() {
+        isUsedButtonClicked = true;
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paintComponent(g);
@@ -84,8 +99,15 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(Color.BLACK);
         g2d.setFont(font);
         g2d.drawString(name, (getWidth() - width) / 2, 150);
+
+        if (isUsedButtonClicked) {
+            g2d.setColor(Color.RED);
+            g2d.setFont(usedKeyFont);
+            g2d.drawString(usedButtonText, (getWidth() - usedButtonWidth) / 2, 255);
+        }
 
         super.paintChildren(g);
     }

@@ -12,12 +12,14 @@ import java.util.HashMap;
 public class SavableApplicationData implements Serializable {
     private int menuVolume;
     private int gameVolume;
+    private int effectsVolume;
     private HashMap<Integer, String> keysCommands;
     private HashMap<String, Integer> commandsKeys;
 
     {
         gameVolume = 80;
         menuVolume = 80;
+        effectsVolume = 80;
 
         keysCommands = new HashMap<>();
         keysCommands.put(KeyEvent.VK_A, "Move left");
