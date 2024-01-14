@@ -3,7 +3,7 @@ package core;
 import org.jetbrains.annotations.NotNull;
 import dto.ApplicationData;
 import utils.GamePainter;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,8 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
     private final Font usedKeyFont;
     private final String usedButtonText;
     private final int usedButtonWidth;
-    private boolean isUsedButtonClicked;
+    private int opacity;
+    private final Timer timer;
     private final List<ActionListener> actionListeners;
 
     {
@@ -45,8 +46,7 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
         usedButtonText = "This key is already in use!";
         usedButtonWidth = getFontMetrics(usedKeyFont).stringWidth(usedButtonText);
 
-        isUsedButtonClicked = false;
-
+        timer = new Timer(50, e -> timerFunction());
         actionListeners = new ArrayList<>();
     }
 
@@ -62,11 +62,19 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
     public void setKey(int key) {
         this.key = key;
         this.keyLabel.setText(KeyEvent.getKeyText(key));
-        isUsedButtonClicked = false;
+    }
+
+    private void timerFunction() {
+        opacity -= 8;
+        if (opacity <= 0) {
+            opacity = 0;
+            timer.stop();
+        }
+        repaint();
     }
 
     private void setupKeyLabel() {
-        keyLabel = ObjectCreator.createLabel("", 2, 30);
+        keyLabel = ComponentCreator.createLabel("", 2, 30);
         keyLabel.setBounds(110, 200, 200, 40);
         keyLabel.setHorizontalAlignment(SwingConstants.CENTER);
         keyLabel.setOpaque(true);
@@ -74,21 +82,22 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
     }
 
     private void setupAcceptButton() {
-        acceptButton = ObjectCreator.createButton("Accept", new Color(0xFFE3C755, true), 2, 16);
+        acceptButton = ComponentCreator.createButton("Accept", new Color(0xFFE3C755, true), 2, 16);
         acceptButton.setBounds(245, 310, 70, 25);
         acceptButton.addActionListener(this);
         this.add(acceptButton);
     }
 
     private void setupCancelButton() {
-        cancelButton = ObjectCreator.createButton("Cancel", new Color(0xFFE3C755, true), 2, 16);
+        cancelButton = ComponentCreator.createButton("Cancel", new Color(0xFFE3C755, true), 2, 16);
         cancelButton.setBounds(105, 310, 70, 25);
         cancelButton.addActionListener(this);
         this.add(cancelButton);
     }
 
     public void usedButtonClicked() {
-        isUsedButtonClicked = true;
+        opacity = 255;
+        timer.start();
     }
 
     @Override
@@ -103,11 +112,9 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
         g2d.setFont(font);
         g2d.drawString(name, (getWidth() - width) / 2, 150);
 
-        if (isUsedButtonClicked) {
-            g2d.setColor(Color.RED);
-            g2d.setFont(usedKeyFont);
-            g2d.drawString(usedButtonText, (getWidth() - usedButtonWidth) / 2, 255);
-        }
+        g2d.setColor(new Color(255, 0, 0, opacity));
+        g2d.setFont(usedKeyFont);
+        g2d.drawString(usedButtonText, (getWidth() - usedButtonWidth) / 2, 255);
 
         super.paintChildren(g);
     }

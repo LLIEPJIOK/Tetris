@@ -6,6 +6,7 @@ import dto.Square;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,7 +23,7 @@ public class GamePainter {
     static {
         squareSize = ApplicationData.getSquareSize();
         nextFigureSquareSize = ApplicationData.getNextFigureSquareSize();
-        cubeColors = new String[]{"Green", "Red", "Yellow", "Purple", "Blue", "Orange", "Turquoise"};
+        cubeColors = new String[]{"Green", "Yellow", "Purple", "Blue", "Orange", "Turquoise", "Error"};
         try {
             images = new BufferedImage[cubeColors.length];
             for (int i = 0; i < images.length; ++i) {
@@ -61,6 +62,14 @@ public class GamePainter {
         dy -= (mxY - mnY + 1) * nextFigureSquareSize / 2;
         for (Square square : figure.getSquares()) {
             paintSquare(g, square.getX() - mnX, square.getY(), dx, dy, nextFigureSquareSize, figure.getColor());
+        }
+    }
+
+    public static void paintLastFigure(Graphics g, @NotNull Figure figure, float transparency) {
+        Graphics2D graphics = (Graphics2D) g;
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+        for (Square square : figure.getSquares()) {
+            graphics.drawImage(images[6],square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize, null);
         }
     }
 

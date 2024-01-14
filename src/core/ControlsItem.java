@@ -2,7 +2,7 @@ package core;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ public class ControlsItem extends JComponent implements ActionListener {
     }
 
     public ControlsItem(String name, int key) {
-        label = ObjectCreator.createLabel(name, 0, 16);
+        label = ComponentCreator.createLabel(name, 0, 16);
         label.setOpaque(true);
         label.setPreferredSize(new Dimension(50, 20));
         label.setBounds(0, 0, 130, 25);
@@ -35,7 +35,7 @@ public class ControlsItem extends JComponent implements ActionListener {
 
         this.key = key;
 
-        button = ObjectCreator.createButton(KeyEvent.getKeyText(key), new Color(0xFFE3C755, true), 2, 16);
+        button = ComponentCreator.createButton(KeyEvent.getKeyText(key), new Color(0xFFE3C755, true), 2, 16);
         button.setPreferredSize(new Dimension(50, 20));
         button.setBounds(150, 0, 100, 25);
         button.addActionListener(this);

@@ -3,7 +3,7 @@ package core;
 import org.jetbrains.annotations.NotNull;
 import dto.ApplicationData;
 import utils.GamePainter;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,15 +24,15 @@ public class PausePanel extends JPanel implements ActionListener {
         setOpaque(false);
         setFocusable(false);
 
-        resumeButton = ObjectCreator.createButton("Resume", new Color(0xFFE3C755, true), 2, 30);
+        resumeButton = ComponentCreator.createButton("Resume", new Color(0xFFE3C755, true), 2, 30);
         resumeButton.setBounds(115, 130, 190, 50);
         resumeButton.addActionListener(this);
 
-        settingsButton = ObjectCreator.createButton("Settings", new Color(0xFFE3C755, true), 2, 30);
+        settingsButton = ComponentCreator.createButton("Settings", new Color(0xFFE3C755, true), 2, 30);
         settingsButton.setBounds(115, 205, 190, 50);
         settingsButton.addActionListener(this);
 
-        menuButton = ObjectCreator.createButton("Menu", new Color(0xFFE3C755, true), 2, 30);
+        menuButton = ComponentCreator.createButton("Menu", new Color(0xFFE3C755, true), 2, 30);
         menuButton.setBounds(115, 285, 190, 50);
         menuButton.addActionListener(this);
 

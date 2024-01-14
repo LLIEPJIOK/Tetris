@@ -89,7 +89,7 @@ public class Figure {
         IntStream.range(0, rotations).forEach(i -> squares = rotateRight());
         putOnTop();
         putInCenter(offset);
-        color = rnd.nextInt(7) + 1;
+        color = rnd.nextInt(6) + 1;
     }
 
     private Square @NotNull [] squareArrayCopy(Square @NotNull [] squares) {

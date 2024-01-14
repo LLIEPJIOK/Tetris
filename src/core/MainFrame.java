@@ -61,7 +61,7 @@ public class MainFrame extends JFrame implements ActionListener {
     public void actionPerformed(@NotNull ActionEvent e) {
         switch (e.getActionCommand()) {
             case "start game" -> {
-                playArea.startGame();
+                playArea.startNewGame();
                 CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
                 cardLayout.show(cardPanel, "PlayArea");
                 SoundPlayer.stopMenuMusic();

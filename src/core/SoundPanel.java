@@ -2,7 +2,7 @@ package core;
 
 import org.jetbrains.annotations.NotNull;
 import dto.ApplicationData;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 import utils.SoundPlayer;
 
 import javax.swing.*;
@@ -74,7 +74,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
     }
 
     private @NotNull JLabel createLabel(String text) {
-        JLabel label = ObjectCreator.createLabel(text, 0, 16);
+        JLabel label = ComponentCreator.createLabel(text, 0, 16);
         label.setOpaque(true);
         label.setPreferredSize(new Dimension(55, 20));
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -82,7 +82,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
     }
 
     private @NotNull JLabel createVolumeLabel() {
-        JLabel label = ObjectCreator.createLabel("", 0, 16);
+        JLabel label = ComponentCreator.createLabel("", 0, 16);
         label.setLocation(325, 35);
         label.setPreferredSize(new Dimension(35, 20));
         label.setOpaque(true);
@@ -125,7 +125,7 @@ public class SoundPanel extends JPanel implements ChangeListener, ActionListener
     }
 
     private void setupBackButton() {
-        backButton = ObjectCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
+        backButton = ComponentCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
         backButton.setPreferredSize(new Dimension(55, 25));
         backButton.addActionListener(this);
         backButton.removeActionListener(ApplicationData.getButtonClickPlayer());

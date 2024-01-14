@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ObjectCreator {
+public class ComponentCreator {
     public static @NotNull JButton createButton(String text, Color color,
                                                 int borderThickness, int fontSize) {
         JButton button = new JButton(text);

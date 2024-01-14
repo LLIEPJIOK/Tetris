@@ -2,7 +2,7 @@ package core;
 
 import dto.ApplicationData;
 import org.jetbrains.annotations.NotNull;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 import utils.SoundPlayer;
 
 import javax.swing.*;
@@ -94,7 +94,7 @@ public class ControlsPanel extends JPanel implements ActionListener, KeyListener
     }
 
     private void setupBackButton() {
-        backButton = ObjectCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
+        backButton = ComponentCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
         backButton.setPreferredSize(new Dimension(55, 25));
         backButton.addActionListener(this);
         backButton.removeActionListener(ApplicationData.getButtonClickPlayer());

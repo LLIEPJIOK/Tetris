@@ -1,7 +1,7 @@
 package core;
 
 import dto.ApplicationData;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 import utils.SoundPlayer;
 
 import javax.swing.*;
@@ -56,7 +56,7 @@ public class Menu extends JPanel {
     }
 
     private void createStartButton() {
-        start = ObjectCreator.createButton("Start", buttonColor, 4, 26);
+        start = ComponentCreator.createButton("Start", buttonColor, 4, 26);
         start.setPreferredSize(new Dimension(150, 50));
         start.addActionListener(e -> {
             SoundPlayer.playPressedStartButtonMusic();
@@ -67,7 +67,7 @@ public class Menu extends JPanel {
     }
 
     private void createRecordsButton() {
-        records = ObjectCreator.createButton("Records", buttonColor, 4, 26);
+        records = ComponentCreator.createButton("Records", buttonColor, 4, 26);
         records.setPreferredSize(new Dimension(150, 50));
         records.addActionListener(e -> {
             //TODO: Create Records
@@ -75,7 +75,7 @@ public class Menu extends JPanel {
     }
 
     private void createSettingsButton() {
-        settings = ObjectCreator.createButton("Settings", buttonColor, 4, 26);
+        settings = ComponentCreator.createButton("Settings", buttonColor, 4, 26);
         settings.setPreferredSize(new Dimension(150, 50));
         settings.addActionListener(e -> {
             ActionEvent actionEvent = new ActionEvent(this, 1, "open settings");
@@ -84,7 +84,7 @@ public class Menu extends JPanel {
     }
 
     private void createExitButton() {
-        exit = ObjectCreator.createButton("Exit", buttonColor, 4, 26);
+        exit = ComponentCreator.createButton("Exit", buttonColor, 4, 26);
         exit.setPreferredSize(new Dimension(150, 50));
         exit.addActionListener(e -> System.exit(0));
     }

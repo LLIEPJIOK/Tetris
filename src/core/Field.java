@@ -31,6 +31,11 @@ public class Field extends JPanel {
     private Figure nextFigure;
     private final Timer timer;
     private static BufferedImage image;
+    private float lastFigureTransparency;
+    private float lastFigureDTransparency;
+    private float lastFigurePaintTimes;
+    private Timer lastFigureTimer;
+    private Timer stoppedTimer;
     private final List<ActionListener> actionListeners;
 
     static {
@@ -52,6 +57,7 @@ public class Field extends JPanel {
             moveDown();
             repaint();
         });
+        lastFigureTimer = new Timer(50, e -> lastFigureTimerFunction());
 
         setSize(new Dimension(fieldWidth * squareSize, fieldHeight * squareSize));
     }
@@ -70,11 +76,43 @@ public class Field extends JPanel {
     }
 
     public void pauseGame() {
-        timer.stop();
+        if (timer.isRunning()) {
+            timer.stop();
+            stoppedTimer = timer;
+        } else if (lastFigureTimer.isRunning()) {
+            lastFigureTimer.stop();
+            stoppedTimer = lastFigureTimer;
+        }
     }
 
     public void resumeGame() {
-        timer.start();
+        if (stoppedTimer != null) {
+            stoppedTimer.start();
+            stoppedTimer = null;
+        }
+    }
+
+    public boolean isHandleMoves() {
+        return timer.isRunning();
+    }
+
+    private void lastFigureTimerFunction() {
+        lastFigureTransparency += lastFigureDTransparency;
+        if (lastFigureTransparency >= 1f) {
+            lastFigureTransparency = 1f;
+            lastFigureDTransparency *= -1;
+            --lastFigurePaintTimes;
+        } else if (lastFigureTransparency <= 0) {
+            lastFigureTransparency = 0f;
+            lastFigureDTransparency *= -1;
+            --lastFigurePaintTimes;
+        }
+        repaint();
+        if (lastFigurePaintTimes == 0) {
+            lastFigureTimer.stop();
+            ActionEvent actionEvent = new ActionEvent(this, 1, "end game");
+            notifyListeners(actionEvent);
+        }
     }
 
     private boolean isInEmptySpace(Square[] squares) {
@@ -123,6 +161,14 @@ public class Field extends JPanel {
         saveInField(curFigure.getSquares(), curFigure.getColor());
         clearFullLines();
         Figure.copy(nextFigure, curFigure);
+        if (!isInEmptySpace(nextFigure.getSquares())) {
+            timer.stop();
+            lastFigureTransparency = 0f;
+            lastFigureDTransparency = 0.5f;
+            lastFigurePaintTimes = 6;
+            lastFigureTimer.start();
+            return;
+        }
         nextFigure.generateFigure(fieldWidth / 2 - 1);
         ActionEvent actionEvent = new ActionEvent(this, 1, "repaint");
         notifyListeners(actionEvent);
@@ -183,13 +229,17 @@ public class Field extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
-        GamePainter.paintCurFigure(g, curFigure, 0, 0);
         for (int i = 0; i < fieldHeight; ++i) {
             for (int j = 0; j < fieldWidth; ++j) {
                 if (spaces[i][j] != 0) {
                     GamePainter.paintSquare(g, j, i, spaces[i][j]);
                 }
             }
+        }
+        if (timer.isRunning()) {
+            GamePainter.paintCurFigure(g, curFigure, 0, 0);
+        } else if (lastFigureTimer.isRunning()) {
+            GamePainter.paintLastFigure(g, curFigure, lastFigureTransparency);
         }
     }
 

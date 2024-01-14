@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import dto.ApplicationData;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 import utils.SoundPlayer;
 
 import javax.swing.*;
@@ -71,19 +71,19 @@ public class Settings extends JPanel implements ActionListener {
     }
 
     private void setupSoundButton() {
-        soundButton = ObjectCreator.createButton("Sound", buttonColor, 4, 26);
+        soundButton = ComponentCreator.createButton("Sound", buttonColor, 4, 26);
         soundButton.setPreferredSize(new Dimension(150, 50));
         soundButton.addActionListener(this);
     }
 
     private void setupControlsButton() {
-        controlsButton = ObjectCreator.createButton("Controls", buttonColor, 4, 26);
+        controlsButton = ComponentCreator.createButton("Controls", buttonColor, 4, 26);
         controlsButton.setPreferredSize(new Dimension(150, 50));
         controlsButton.addActionListener(this);
     }
 
     private void setupBackButton() {
-        backButton = ObjectCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
+        backButton = ComponentCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
         backButton.setPreferredSize(new Dimension(55, 25));
         backButton.addActionListener(this);
         backButton.removeActionListener(ApplicationData.getButtonClickPlayer());

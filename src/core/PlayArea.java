@@ -4,7 +4,7 @@ import dto.ApplicationData;
 import dto.ScoreEvent;
 import org.jetbrains.annotations.NotNull;
 import utils.GamePainter;
-import utils.ObjectCreator;
+import utils.ComponentCreator;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,16 +20,17 @@ import java.util.Objects;
 
 public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private Field field;
-    private JLabel score;
-    private JLabel lines;
-    private JLabel linesLabel;
+    private JLabel scoreNumberLabel;
     private JLabel scoreLabel;
+    private JLabel linesNumberLabel;
+    private JLabel linesLabel;
     private PauseButton pauseButton;
     private PausePanel pausePanel;
+    private EndGamePanel endGamePanel;
     private static BufferedImage image;
     private final HashMap<Integer, String> keyCommands;
     private final List<ActionListener> actionListeners;
-    private final Timer pauseKeyTimer;
+    private Timer pauseKeyTimer;
     private boolean handleKeys;
 
     {
@@ -42,10 +43,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        pauseKeyTimer = new Timer(50, e -> {
-            Timer timer = (Timer) e.getSource();
-            timer.stop();
-        });
+        pauseKeyTimer = new Timer(50, e -> pauseKeyTimer.stop());
         handleKeys = false;
     }
 
@@ -55,12 +53,11 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     private void setupMainPanel() {
         setupPauseButton();
-        setupTextScore();
-        setupTextLines();
-        setupScore();
-        setupLines();
+        setupScoreLabels();
+        setupLinesLabels();
         setupField();
-        setupPauseFrame();
+        setupPausePanel();
+        setupEngGamePanel();
 
         setLayout(null);
     }
@@ -71,32 +68,36 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         pauseButton.addActionListener(this);
         this.add(pauseButton);
     }
+    private void setupScoreLabels() {
+        scoreLabel = ComponentCreator.createLabel("Score", 0, 18);
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        scoreLabel.setBounds(293, 160, 100, 20);
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        scoreLabel.setForeground(new Color(255, 164, 60));
 
-    private void setupTextScore() {
-        scoreLabel = ObjectCreator.createLabel("Score", 2, 20);
-        scoreLabel.setOpaque(true);
-        scoreLabel.setBounds(280, 200, 60, 25);
+        scoreNumberLabel = ComponentCreator.createLabel("0", 0, 18);
+        scoreNumberLabel.setBounds(293, 184, 100, 20);
+        scoreNumberLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        scoreNumberLabel.setForeground(new Color(255, 164, 60));
+
         this.add(scoreLabel);
+        this.add(scoreNumberLabel);
     }
 
+    private void setupLinesLabels() {
+        linesLabel = ComponentCreator.createLabel("Lines", 0, 18);
+        linesLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        linesLabel.setBounds(293, 250, 100, 20);
+        linesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        linesLabel.setForeground(new Color(255, 164, 60));
 
-    private void setupTextLines() {
-        linesLabel = ObjectCreator.createLabel("Lines", 2, 20);
-        linesLabel.setOpaque(true);
-        linesLabel.setBounds(283, 270, 53, 25);
+        linesNumberLabel = ComponentCreator.createLabel("0", 0, 18);
+        linesNumberLabel.setBounds(293, 274, 100, 20);
+        linesNumberLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        linesNumberLabel.setForeground(new Color(255, 164, 60));
+
         this.add(linesLabel);
-    }
-
-    private void setupScore() {
-        score = ObjectCreator.createLabel("0", 0, 18);
-        score.setBounds(280, 225, 60, 25);
-        this.add(score);
-    }
-
-    private void setupLines() {
-        lines = ObjectCreator.createLabel("0", 0, 18);
-        lines.setBounds(283, 295, 60, 25);
-        this.add(lines);
+        this.add(linesNumberLabel);
     }
 
     private void setupField() {
@@ -107,15 +108,21 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         this.add(field);
     }
 
-    private void setupPauseFrame() {
+    private void setupPausePanel() {
         pausePanel = new PausePanel();
         pausePanel.setVisible(false);
         pausePanel.addActionListener(this);
-        setComponentZOrder(pausePanel, 0);
         this.add(pausePanel);
     }
 
-    public void startGame() {
+    private void setupEngGamePanel() {
+        endGamePanel = new EndGamePanel();
+        endGamePanel.setVisible(false);
+        endGamePanel.addActionListener(this);
+        this.add(endGamePanel);
+    }
+
+    public void startNewGame() {
         field.startNewGame();
         handleKeys = true;
     }
@@ -128,8 +135,6 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     public void paint(Graphics g) {
         super.paint(g);
         GamePainter.paintNextFigure(g, field.getNextFigure(), 342, 70);
-//        g.setColor(Color.BLUE);
-//        g.fillRect(302, 30, 80, 80);
         super.paintChildren(g);
     }
 
@@ -150,7 +155,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
                 pauseButton.doClick();
                 pauseKeyTimer.start();
             }
-        } else if (pauseButton.getType() == 0) {
+        } else if (field.isHandleMoves()) {
             switch (command) {
                 case "Move left" -> field.moveLeft();
                 case "Move down" -> field.moveDown();
@@ -183,15 +188,15 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             } else {
                 field.pauseGame();
             }
-            setComponentZOrder(pausePanel, 0);
-            setComponentZOrder(pauseButton, 0);
+            this.setComponentZOrder(pausePanel, 0);
+            this.setComponentZOrder(pauseButton, 0);
             return;
         }
         if (e instanceof ScoreEvent scoreEvent) {
-            int curScore = Integer.parseInt(score.getText());
-            score.setText(Integer.toString(curScore + scoreEvent.getScore()));
-            int curLines = Integer.parseInt(lines.getText());
-            lines.setText(Integer.toString(curLines + scoreEvent.getLines()));
+            int curScore = Integer.parseInt(scoreNumberLabel.getText());
+            scoreNumberLabel.setText(Integer.toString(curScore + scoreEvent.getScore()));
+            int curLines = Integer.parseInt(linesNumberLabel.getText());
+            linesNumberLabel.setText(Integer.toString(curLines + scoreEvent.getLines()));
             return;
         }
         switch (e.getActionCommand()) {
@@ -205,6 +210,12 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             }
             case "resume game" -> pauseButton.doClick();
             case "repaint" -> repaint();
+            case "end game" -> {
+                endGamePanel.setVisible(true);
+                pauseButton.setEnabled(false);
+                this.setComponentZOrder(endGamePanel, 0);
+            }
+            case "new game" -> startNewGame();
         }
     }
 }
