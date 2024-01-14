@@ -1,7 +1,7 @@
-package core;
+package core.menu.settings.controls;
 
 import org.jetbrains.annotations.NotNull;
-import dto.ApplicationData;
+import config.ApplicationData;
 import utils.GamePainter;
 import utils.ComponentCreator;
 

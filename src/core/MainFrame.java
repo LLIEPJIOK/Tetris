@@ -1,7 +1,11 @@
 package core;
 
+import core.game.PlayArea;
+import core.menu.Menu;
+import core.menu.records.Records;
+import core.menu.settings.Settings;
 import org.jetbrains.annotations.NotNull;
-import dto.ApplicationData;
+import config.ApplicationData;
 import utils.SoundPlayer;
 
 import javax.swing.*;
@@ -15,6 +19,7 @@ import java.util.Objects;
 public class MainFrame extends JFrame implements ActionListener {
     private final Menu menu;
     private final PlayArea playArea;
+    private final Records records;
     private final Settings settings;
     private final JPanel cardPanel;
 
@@ -27,17 +32,21 @@ public class MainFrame extends JFrame implements ActionListener {
         playArea = new PlayArea();
         playArea.addActionListener(this);
 
+        records = new Records();
+        records.addActionListener(this);
+
         settings = new Settings();
         settings.addActionListener(this);
 
         cardPanel = new JPanel(new CardLayout());
         cardPanel.add(menu, "Menu");
         cardPanel.add(playArea, "PlayArea");
+        cardPanel.add(records, "Records");
         cardPanel.add(settings, "Settings");
         this.add(cardPanel);
 
         setTitle("Tetris");
-        setIconImage(new ImageIcon(Objects.requireNonNull(PlayArea.class.getResource(
+        setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getResource(
                 ApplicationData.getTetrisIconPath()))).getImage());
         setSize(ApplicationData.getApplicationDimension());
         setLocationRelativeTo(null);
@@ -72,6 +81,11 @@ public class MainFrame extends JFrame implements ActionListener {
                 cardLayout.show(cardPanel, "Menu");
                 SoundPlayer.stopGameMusic();
                 SoundPlayer.playMenuMusic();
+            }
+            case "open records" -> {
+                records.setupRecords();
+                CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+                cardLayout.show(cardPanel, "Records");
             }
             case "open settings" -> {
                 CardLayout cardLayout = (CardLayout) cardPanel.getLayout();

@@ -1,16 +1,21 @@
-package dto;
+package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import core.ButtonClickPlayer;
+import utils.ButtonClickPlayer;
 import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class ApplicationData {
+    private static final ObjectMapper objectMapper;
+    private static final File file;
+    private static SavableApplicationData savableData;
     @Getter
     private static final Dimension applicationDimension;
     @Getter
@@ -41,33 +46,34 @@ public class ApplicationData {
     private final static String tetrisIconPath;
     @Getter
     private final static String menuGifPath;
-    private static final ObjectMapper objectMapper;
-    private static final File file;
-    private static SavableApplicationData savableData;
     @Getter
     private static final ButtonClickPlayer buttonClickPlayer;
+    @Getter
+    private static final List<Integer> records;
 
     static {
+        objectMapper = new ObjectMapper();
+        file = new File("src/config/config.json");
+
+        load();
+
         applicationDimension = new Dimension(420, 500);
         squareSize = 20;
         nextFigureSquareSize = 14;
         fieldWidth = 10;
         fieldHeight = 20;
         timerDuration = 500;
-        backgroundMusicPath = "../BackMusic.wav";
-        gameMusicPath = "../GameMusic.wav";
-        usedKeyMusicPath = "../UsedKey.wav";
-        hoverButtonMusicPath = "../HoverButtonSound.wav";
-        pressedButtonMusicPath = "../ButtonPressed.wav";
-        pressedStartButtonMusicPath = "../StartButtonPressed.wav";
-        pressedBackButtonMusicPath = "../BackButtonPressed.wav";
-        tetrisIconPath = "../tetris.png";
-        menuGifPath = "../MenuGif.gif";
-        objectMapper = new ObjectMapper();
-        file = new File("src/settings/settings.json");
+        backgroundMusicPath = "music/BackMusic.wav";
+        gameMusicPath = "music/GameMusic.wav";
+        usedKeyMusicPath = "music/UsedKey.wav";
+        hoverButtonMusicPath = "music/HoverButtonSound.wav";
+        pressedButtonMusicPath = "music/ButtonPressed.wav";
+        pressedStartButtonMusicPath = "music/StartButtonPressed.wav";
+        pressedBackButtonMusicPath = "music/BackButtonPressed.wav";
+        tetrisIconPath = "tetris.png";
+        menuGifPath = "MenuGif.gif";
         buttonClickPlayer = new ButtonClickPlayer();
-
-        load();
+        records = savableData.getRecords();
 
         UIManager.getDefaults().put("Button.disabledText", Color.BLACK);
     }
@@ -102,6 +108,25 @@ public class ApplicationData {
 
     public static void setEffectsVolume(int volume) {
         savableData.setEffectsVolume(volume);
+    }
+
+    private static void findPlaceForLastRecord() {
+        for (int i = records.size() - 2; i >= 0; --i) {
+            if (records.get(i) >= records.get(i + 1)) {
+                break;
+            }
+            Collections.swap(records, i, i + 1);
+        }
+    }
+
+    public static void addRecord(int record) {
+        if (records.size() != 10) {
+            records.add(record);
+        } else if (records.getLast() < record) {
+            records.set(9, record);
+        }
+        findPlaceForLastRecord();
+        save();
     }
 
     private static void load() {

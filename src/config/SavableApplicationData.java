@@ -1,11 +1,13 @@
-package dto;
+package config;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +17,7 @@ public class SavableApplicationData implements Serializable {
     private int effectsVolume;
     private HashMap<Integer, String> keysCommands;
     private HashMap<String, Integer> commandsKeys;
+    private List<Integer> records;
 
     {
         gameVolume = 80;
@@ -38,5 +41,7 @@ public class SavableApplicationData implements Serializable {
         commandsKeys.put("Rotate right", KeyEvent.VK_R);
         commandsKeys.put("Drop", KeyEvent.VK_SPACE);
         commandsKeys.put("Pause/Resume", KeyEvent.VK_ESCAPE);
+
+        records = new ArrayList<>();
     }
 }

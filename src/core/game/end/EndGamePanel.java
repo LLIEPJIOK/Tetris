@@ -1,7 +1,6 @@
-package core;
+package core.game.end;
 
-import dto.ApplicationData;
-import lombok.Setter;
+import config.ApplicationData;
 import org.jetbrains.annotations.NotNull;
 import utils.ComponentCreator;
 import utils.GamePainter;
@@ -16,10 +15,10 @@ import java.util.List;
 public class EndGamePanel extends JPanel implements ActionListener {
     private JButton menuButton;
     private JButton newGameButton;
-    @Setter
-    private int score;
-    @Setter
-    private int lines;
+    private JLabel scoreNumberLabel;
+    private JLabel scoreLabel;
+    private JLabel linesNumberLabel;
+    private JLabel linesLabel;
     private final List<ActionListener> actionListeners;
 
     {
@@ -31,6 +30,8 @@ public class EndGamePanel extends JPanel implements ActionListener {
 
         setupNewGameButton();
         setupMenuButton();
+        setupScoreLabels();
+        setupLinesLabels();
 
         actionListeners = new ArrayList<>();
     }
@@ -53,6 +54,36 @@ public class EndGamePanel extends JPanel implements ActionListener {
         this.add(menuButton);
     }
 
+    private void setupScoreLabels() {
+        scoreLabel = ComponentCreator.createLabel("Score", 0, 18);
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        scoreLabel.setBounds(120, 190, 80, 20);
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        scoreLabel.setOpaque(true);
+
+        scoreNumberLabel = ComponentCreator.createLabel("0", 0, 18);
+        scoreNumberLabel.setBounds(220, 190, 100, 20);
+        scoreNumberLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        this.add(scoreLabel);
+        this.add(scoreNumberLabel);
+    }
+
+    private void setupLinesLabels() {
+        linesLabel = ComponentCreator.createLabel("Lines", 0, 18);
+        linesLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        linesLabel.setBounds(120, 230, 80, 20);
+        linesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        linesLabel.setOpaque(true);
+
+        linesNumberLabel = ComponentCreator.createLabel("0", 0, 18);
+        linesNumberLabel.setBounds(220, 230, 100, 20);
+        linesNumberLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        this.add(linesLabel);
+        this.add(linesNumberLabel);
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paintComponent(g);
@@ -65,7 +96,7 @@ public class EndGamePanel extends JPanel implements ActionListener {
         Font font = new Font("Arial", Font.BOLD, 30);
         g2d.setFont(font);
         g2d.setColor(Color.BLACK);
-        g2d.drawString("Game is over!", (getWidth() - getFontMetrics(font).stringWidth("Game is over!")), 50);
+        g2d.drawString("Game is over!", (getWidth() - getFontMetrics(font).stringWidth("Game is over!")) / 2, 150);
         super.paintChildren(g);
     }
 

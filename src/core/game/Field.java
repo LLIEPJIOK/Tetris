@@ -1,10 +1,10 @@
-package core;
+package core.game;
 
 import dto.Figure;
 import dto.ScoreEvent;
 import dto.Square;
 import lombok.Getter;
-import dto.ApplicationData;
+import config.ApplicationData;
 import utils.GamePainter;
 
 import javax.imageio.ImageIO;
@@ -34,7 +34,7 @@ public class Field extends JPanel {
     private float lastFigureTransparency;
     private float lastFigureDTransparency;
     private float lastFigurePaintTimes;
-    private Timer lastFigureTimer;
+    private final Timer lastFigureTimer;
     private Timer stoppedTimer;
     private final List<ActionListener> actionListeners;
 
@@ -43,12 +43,6 @@ public class Field extends JPanel {
         fieldWidth = ApplicationData.getFieldWidth();
         fieldHeight = ApplicationData.getFieldHeight();
         timerDuration = ApplicationData.getTimerDuration();
-
-        try {
-            image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../GameBackground.jpg")).getFile()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     {
@@ -58,6 +52,11 @@ public class Field extends JPanel {
             repaint();
         });
         lastFigureTimer = new Timer(50, e -> lastFigureTimerFunction());
+        try {
+            image = ImageIO.read(new File(Objects.requireNonNull(this.getClass().getResource("GameBackground.jpg")).getFile()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setSize(new Dimension(fieldWidth * squareSize, fieldHeight * squareSize));
     }

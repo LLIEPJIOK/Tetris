@@ -1,6 +1,6 @@
 package utils;
 
-import dto.ApplicationData;
+import config.ApplicationData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

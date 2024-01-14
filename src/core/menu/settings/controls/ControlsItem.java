@@ -1,4 +1,4 @@
-package core;
+package core.menu.settings.controls;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

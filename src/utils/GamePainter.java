@@ -1,12 +1,11 @@
 package utils;
 
-import dto.ApplicationData;
+import config.ApplicationData;
 import dto.Figure;
 import dto.Square;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -27,7 +26,7 @@ public class GamePainter {
         try {
             images = new BufferedImage[cubeColors.length];
             for (int i = 0; i < images.length; ++i) {
-                images[i] = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../Cubes/" + cubeColors[i] + ".png")).getFile()));
+                images[i] = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("cubes/" + cubeColors[i] + ".png")).getFile()));
             }
         } catch (IOException e) {
             e.printStackTrace();

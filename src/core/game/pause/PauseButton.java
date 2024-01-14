@@ -1,6 +1,6 @@
-package core;
+package core.game.pause;
 
-import dto.ApplicationData;
+import config.ApplicationData;
 import lombok.Getter;
 import utils.SoundPlayer;
 

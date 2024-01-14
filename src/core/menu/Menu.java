@@ -1,6 +1,6 @@
-package core;
+package core.menu;
 
-import dto.ApplicationData;
+import config.ApplicationData;
 import utils.ComponentCreator;
 import utils.SoundPlayer;
 
@@ -70,7 +70,8 @@ public class Menu extends JPanel {
         records = ComponentCreator.createButton("Records", buttonColor, 4, 26);
         records.setPreferredSize(new Dimension(150, 50));
         records.addActionListener(e -> {
-            //TODO: Create Records
+            ActionEvent actionEvent = new ActionEvent(this, 1, "open records");
+            actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
         });
     }
 

@@ -1,6 +1,6 @@
 package utils;
 
-import dto.ApplicationData;
+import config.ApplicationData;
 
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;

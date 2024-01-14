@@ -1,6 +1,9 @@
-package core;
+package core.game;
 
-import dto.ApplicationData;
+import core.game.end.EndGamePanel;
+import core.game.pause.PauseButton;
+import core.game.pause.PausePanel;
+import config.ApplicationData;
 import dto.ScoreEvent;
 import org.jetbrains.annotations.NotNull;
 import utils.GamePainter;
@@ -21,9 +24,7 @@ import java.util.Objects;
 public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private Field field;
     private JLabel scoreNumberLabel;
-    private JLabel scoreLabel;
     private JLabel linesNumberLabel;
-    private JLabel linesLabel;
     private PauseButton pauseButton;
     private PausePanel pausePanel;
     private EndGamePanel endGamePanel;
@@ -39,7 +40,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         keyCommands = ApplicationData.getKeysCommands();
         actionListeners = new ArrayList<>();
         try {
-            image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("../PlayAreaBackground.png")).getFile()));
+            image = ImageIO.read(new File(Objects.requireNonNull(this.getClass().getResource("PlayAreaBackground.png")).getFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,7 +70,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         this.add(pauseButton);
     }
     private void setupScoreLabels() {
-        scoreLabel = ComponentCreator.createLabel("Score", 0, 18);
+        JLabel scoreLabel = ComponentCreator.createLabel("Score", 0, 18);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
         scoreLabel.setBounds(293, 160, 100, 20);
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -85,7 +86,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     }
 
     private void setupLinesLabels() {
-        linesLabel = ComponentCreator.createLabel("Lines", 0, 18);
+        JLabel linesLabel = ComponentCreator.createLabel("Lines", 0, 18);
         linesLabel.setFont(new Font("Arial", Font.BOLD, 18));
         linesLabel.setBounds(293, 250, 100, 20);
         linesLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -123,12 +124,19 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     }
 
     public void startNewGame() {
+        linesNumberLabel.setText("0");
+        scoreNumberLabel.setText("0");
         field.startNewGame();
+        pauseButton.setEnabled(true);
         handleKeys = true;
     }
 
     public void returnToGame() {
         handleKeys = true;
+    }
+
+    public int getScore() {
+        return Integer.parseInt(scoreNumberLabel.getText());
     }
 
     @Override
@@ -213,6 +221,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             case "end game" -> {
                 endGamePanel.setVisible(true);
                 pauseButton.setEnabled(false);
+                ApplicationData.addRecord(getScore());
                 this.setComponentZOrder(endGamePanel, 0);
             }
             case "new game" -> startNewGame();

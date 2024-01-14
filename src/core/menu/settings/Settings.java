@@ -1,9 +1,12 @@
-package core;
+package core.menu.settings;
 
+import core.menu.MenuBackgroundPanel;
+import core.menu.settings.controls.ControlsPanel;
+import core.menu.settings.sound.SoundPanel;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-import dto.ApplicationData;
+import config.ApplicationData;
 import utils.ComponentCreator;
 import utils.SoundPlayer;
 

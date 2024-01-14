@@ -1,6 +1,6 @@
-package core;
+package core.menu;
 
-import dto.ApplicationData;
+import config.ApplicationData;
 
 import javax.swing.*;
 import java.awt.*;

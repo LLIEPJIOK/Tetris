@@ -1,4 +1,4 @@
-package core;
+package core.menu.settings.sound;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
