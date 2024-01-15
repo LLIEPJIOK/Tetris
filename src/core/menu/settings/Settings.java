@@ -19,12 +19,12 @@ import java.util.List;
 
 public class Settings extends JPanel implements ActionListener {
     private MenuBackgroundPanel mainPanel;
-    private JButton soundButton;
-    private JButton controlsButton;
-    private JButton backButton;
     private SoundPanel soundPanel;
     @Getter
     private ControlsPanel controlsPanel;
+    private JButton soundButton;
+    private JButton controlsButton;
+    private JButton backButton;
     private final JPanel cardPanel;
     private final Color buttonColor;
     @Setter

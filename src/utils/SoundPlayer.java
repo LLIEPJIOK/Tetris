@@ -1,7 +1,5 @@
 package utils;
 
-import config.ApplicationData;
-
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -17,141 +15,85 @@ public class SoundPlayer {
     private static Clip pressedStartButtonMusic;
     private static Clip pressedBackButtonMusic;
 
+    public static void loadMusic() {
+        menuMusic = loadMusic("music/BackMusic.wav");
+        gameMusic = loadMusic("music/GameMusic.wav");
+        usedKeyMusic = loadMusic("music/UsedKey.wav");
+        hoverButtonMusic = loadMusic("music/HoverButtonSound.wav");
+        pressedButtonMusic = loadMusic("music/ButtonPressed.wav");
+        pressedStartButtonMusic = loadMusic("music/StartButtonPressed.wav");
+        pressedBackButtonMusic = loadMusic("music/BackButtonPressed.wav");
+    }
+
     private static AudioInputStream createAudioInputStream(String fileName) throws UnsupportedAudioFileException, IOException {
         InputStream audioSrc = SoundPlayer.class.getResourceAsStream(fileName);
         return AudioSystem.getAudioInputStream(new BufferedInputStream(Objects.requireNonNull(audioSrc)));
     }
 
-    public static void loadMusic() {
-        loadMenuMusic();
-        loadGameMusic();
-        loadUsedKeyMusic();
-        loadHoverButtonMusic();
-        loadPressedButtonMusic();
-        loadPressedStartButtonMusic();
-        loadPressedBackButtonMusic();
-    }
-
-    private static void loadMenuMusic() {
+    private static Clip loadMusic(String fileName) {
+        Clip clip = null;
         try {
-            menuMusic = AudioSystem.getClip();
-            menuMusic.open(createAudioInputStream(ApplicationData.getBackgroundMusicPath()));
+            clip = AudioSystem.getClip();
+            clip.open(createAudioInputStream(fileName));
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+        return clip;
     }
 
-    private static void loadGameMusic() {
-        try {
-            gameMusic = AudioSystem.getClip();
-            gameMusic.open(createAudioInputStream(ApplicationData.getGameMusicPath()));
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+    private static void playMusicInLoop(Clip clip) {
+        if (clip != null) {
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
-    private static void loadUsedKeyMusic() {
-        try {
-            usedKeyMusic = AudioSystem.getClip();
-            usedKeyMusic.open(createAudioInputStream(ApplicationData.getUsedKeyMusicPath()));
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void loadHoverButtonMusic() {
-        try {
-            hoverButtonMusic = AudioSystem.getClip();
-            hoverButtonMusic.open(createAudioInputStream(ApplicationData.getHoverButtonMusicPath()));
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void loadPressedButtonMusic() {
-        try {
-            pressedButtonMusic = AudioSystem.getClip();
-            pressedButtonMusic.open(createAudioInputStream(ApplicationData.getPressedButtonMusicPath()));
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void loadPressedStartButtonMusic() {
-        try {
-            pressedStartButtonMusic = AudioSystem.getClip();
-            pressedStartButtonMusic.open(createAudioInputStream(ApplicationData.getPressedStartButtonMusicPath()));
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void loadPressedBackButtonMusic() {
-        try {
-            pressedBackButtonMusic = AudioSystem.getClip();
-            pressedBackButtonMusic.open(createAudioInputStream(ApplicationData.getPressedBackButtonMusicPath()));
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+    private static void playMusic(Clip clip) {
+        if (clip != null && !clip.isRunning()) {
+            clip.setFramePosition(0);
+            clip.start();
         }
     }
 
     public static void playMenuMusic() {
-        if (menuMusic != null) {
-            menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
-        }
+        playMusicInLoop(menuMusic);
     }
 
     public static void playGameMusic() {
-        if (gameMusic != null) {
-            gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
-        }
+        playMusicInLoop(gameMusic);
     }
 
     public static void playUsedKeyMusic() {
-        if (usedKeyMusic != null && !usedKeyMusic.isRunning()) {
-            usedKeyMusic.setFramePosition(0);
-            usedKeyMusic.start();
-        }
+        playMusic(usedKeyMusic);
     }
 
     public static void playHoverButtonMusic() {
-        if (hoverButtonMusic != null && !hoverButtonMusic.isRunning()) {
-            hoverButtonMusic.setFramePosition(0);
-            hoverButtonMusic.start();
-        }
+        playMusic(hoverButtonMusic);
     }
 
     public static void playPressedButtonMusic() {
-        if (pressedButtonMusic != null && !pressedButtonMusic.isRunning()) {
-            pressedButtonMusic.setFramePosition(0);
-            pressedButtonMusic.start();
-        }
+        playMusic(pressedButtonMusic);
     }
 
     public static void playPressedStartButtonMusic() {
-        if (pressedStartButtonMusic != null && !pressedStartButtonMusic.isRunning()) {
-            pressedStartButtonMusic.setFramePosition(0);
-            pressedStartButtonMusic.start();
-        }
+        playMusic(pressedStartButtonMusic);
     }
 
     public static void playPressedBackButtonMusic() {
-        if (pressedBackButtonMusic != null && !pressedBackButtonMusic.isRunning()) {
-            pressedBackButtonMusic.setFramePosition(0);
-            pressedBackButtonMusic.start();
+        playMusic(pressedBackButtonMusic);
+    }
+
+    private static void stopMusic(Clip clip) {
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
         }
     }
 
     public static void stopMenuMusic() {
-        if (menuMusic != null && menuMusic.isRunning()) {
-            menuMusic.stop();
-        }
+        stopMusic(menuMusic);
     }
 
     public static void stopGameMusic() {
-        if (gameMusic != null && gameMusic.isRunning()) {
-            gameMusic.stop();
-        }
+        stopMusic(gameMusic);
     }
 
     public static void setMenuVolume(int volume) {

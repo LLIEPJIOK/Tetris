@@ -127,7 +127,6 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         linesNumberLabel.setText("0");
         scoreNumberLabel.setText("0");
         field.startNewGame();
-        pauseButton.setEnabled(true);
         handleKeys = true;
     }
 
@@ -219,10 +218,14 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             case "resume game" -> pauseButton.doClick();
             case "repaint" -> repaint();
             case "end game" -> {
+                handleKeys = false;
+
+                endGamePanel.setScore(getScore());
+                endGamePanel.setLines(Integer.parseInt(linesNumberLabel.getText()));
                 endGamePanel.setVisible(true);
-                pauseButton.setEnabled(false);
-                ApplicationData.addRecord(getScore());
                 this.setComponentZOrder(endGamePanel, 0);
+
+                ApplicationData.addRecord(getScore());
             }
             case "new game" -> startNewGame();
         }

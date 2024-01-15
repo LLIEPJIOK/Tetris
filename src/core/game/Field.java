@@ -24,30 +24,34 @@ public class Field extends JPanel {
     private final static int squareSize;
     private final static int fieldWidth;
     private final static int fieldHeight;
-    private final static int timerDuration;
     private int[][] spaces;
     private Figure curFigure;
     @Getter
     private Figure nextFigure;
     private final Timer timer;
-    private static BufferedImage image;
+    private final Timer lastFigureTimer;
+    private Timer stoppedTimer;
     private float lastFigureTransparency;
     private float lastFigureDTransparency;
     private float lastFigurePaintTimes;
-    private final Timer lastFigureTimer;
-    private Timer stoppedTimer;
+    private static BufferedImage image;
+    private static final int[] speeds;
+    private static final int[] neededLines;
+    private int curSpeed;
+    private int lines;
     private final List<ActionListener> actionListeners;
 
     static {
         squareSize = ApplicationData.getSquareSize();
         fieldWidth = ApplicationData.getFieldWidth();
         fieldHeight = ApplicationData.getFieldHeight();
-        timerDuration = ApplicationData.getTimerDuration();
+        speeds = new int[]{500, 250, 100, 50, 20};
+        neededLines = new int[]{0, 40, 80, 120, 160};
     }
 
     {
         actionListeners = new ArrayList<>();
-        timer = new Timer(timerDuration, e -> {
+        timer = new Timer(500, e -> {
             moveDown();
             repaint();
         });
@@ -71,6 +75,10 @@ public class Field extends JPanel {
         curFigure.generateFigure(fieldWidth / 2 - 1);
         nextFigure = new Figure();
         nextFigure.generateFigure(fieldWidth / 2 - 1);
+
+        lines = 0;
+        curSpeed = 0;
+        timer.setDelay(500);
         timer.start();
     }
 
@@ -137,6 +145,14 @@ public class Field extends JPanel {
         }
     }
 
+    private void addLines(int lines) {
+        this.lines += lines;
+        if (curSpeed + 1 < speeds.length && neededLines[curSpeed + 1] <= this.lines) {
+            ++curSpeed;
+            timer.setDelay(speeds[curSpeed]);
+        }
+    }
+
     private void clearFullLines() {
         int lines = 0;
         for (int i = 0; i < fieldHeight; i++) {
@@ -151,9 +167,17 @@ public class Field extends JPanel {
             }
         }
         if (lines != 0) {
+            addLines(lines);
             ScoreEvent scoreEvent = new ScoreEvent(this, lines);
             notifyListeners(scoreEvent);
         }
+    }
+
+    private void startLastFigureTimer() {
+        lastFigureTransparency = 0f;
+        lastFigureDTransparency = 0.5f;
+        lastFigurePaintTimes = 6;
+        lastFigureTimer.start();
     }
 
     public void handleFigureLanding() {
@@ -162,10 +186,7 @@ public class Field extends JPanel {
         Figure.copy(nextFigure, curFigure);
         if (!isInEmptySpace(nextFigure.getSquares())) {
             timer.stop();
-            lastFigureTransparency = 0f;
-            lastFigureDTransparency = 0.5f;
-            lastFigurePaintTimes = 6;
-            lastFigureTimer.start();
+            startLastFigureTimer();
             return;
         }
         nextFigure.generateFigure(fieldWidth / 2 - 1);
@@ -181,7 +202,6 @@ public class Field extends JPanel {
         }
         curFigure.moveLeft();
     }
-
 
     public void moveDown() {
         for (Square square : curFigure.getSquares()) {
@@ -217,9 +237,9 @@ public class Field extends JPanel {
     }
 
     public void drop() {
-        do {
+        while (isInEmptySpace(curFigure.getSquares())) {
             curFigure.moveDown();
-        } while (isInEmptySpace(curFigure.getSquares()));
+        }
         curFigure.moveUp();
         handleFigureLanding();
     }
@@ -235,6 +255,7 @@ public class Field extends JPanel {
                 }
             }
         }
+
         if (timer.isRunning()) {
             GamePainter.paintCurFigure(g, curFigure, 0, 0);
         } else if (lastFigureTimer.isRunning()) {

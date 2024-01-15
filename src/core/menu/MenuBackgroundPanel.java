@@ -24,9 +24,8 @@ public class MenuBackgroundPanel extends JPanel {
         this.text = text;
         width = getFontMetrics(font).stringWidth(text);
         backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource(
-                ApplicationData.getMenuGifPath()))).getImage();
+                "MenuGif.gif"))).getImage();
     }
-
     public void add(Component comp, int gridx, int gridy) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = gridx;

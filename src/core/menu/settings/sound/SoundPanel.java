@@ -1,7 +1,6 @@
 package core.menu.settings.sound;
 
 import core.menu.MenuBackgroundPanel;
-import core.menu.settings.sound.SliderUI;
 import org.jetbrains.annotations.NotNull;
 import config.ApplicationData;
 import utils.ComponentCreator;

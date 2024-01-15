@@ -27,26 +27,6 @@ public class ApplicationData {
     @Getter
     private final static int fieldHeight;
     @Getter
-    private final static int timerDuration;
-    @Getter
-    private final static String backgroundMusicPath;
-    @Getter
-    private final static String gameMusicPath;
-    @Getter
-    private final static String usedKeyMusicPath;
-    @Getter
-    private final static String hoverButtonMusicPath;
-    @Getter
-    private final static String pressedButtonMusicPath;
-    @Getter
-    private final static String pressedStartButtonMusicPath;
-    @Getter
-    private final static String pressedBackButtonMusicPath;
-    @Getter
-    private final static String tetrisIconPath;
-    @Getter
-    private final static String menuGifPath;
-    @Getter
     private static final ButtonClickPlayer buttonClickPlayer;
     @Getter
     private static final List<Integer> records;
@@ -62,16 +42,6 @@ public class ApplicationData {
         nextFigureSquareSize = 14;
         fieldWidth = 10;
         fieldHeight = 20;
-        timerDuration = 500;
-        backgroundMusicPath = "music/BackMusic.wav";
-        gameMusicPath = "music/GameMusic.wav";
-        usedKeyMusicPath = "music/UsedKey.wav";
-        hoverButtonMusicPath = "music/HoverButtonSound.wav";
-        pressedButtonMusicPath = "music/ButtonPressed.wav";
-        pressedStartButtonMusicPath = "music/StartButtonPressed.wav";
-        pressedBackButtonMusicPath = "music/BackButtonPressed.wav";
-        tetrisIconPath = "tetris.png";
-        menuGifPath = "MenuGif.gif";
         buttonClickPlayer = new ButtonClickPlayer();
         records = savableData.getRecords();
 
@@ -133,7 +103,7 @@ public class ApplicationData {
         try {
             savableData = objectMapper.readValue(file, SavableApplicationData.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            savableData = new SavableApplicationData();
         }
     }
 

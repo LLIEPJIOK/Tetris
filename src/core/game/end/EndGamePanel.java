@@ -40,6 +40,14 @@ public class EndGamePanel extends JPanel implements ActionListener {
         actionListeners.add(actionListener);
     }
 
+    public void setScore(int score) {
+        scoreNumberLabel.setText(String.valueOf(score));
+    }
+
+    public void setLines(int lines) {
+        linesNumberLabel.setText(String.valueOf(lines));
+    }
+
     private void setupNewGameButton() {
         newGameButton = ComponentCreator.createButton("New game", new Color(0xFFE3C755, true), 2, 16);
         newGameButton.setBounds(225, 310, 90, 25);
@@ -96,7 +104,7 @@ public class EndGamePanel extends JPanel implements ActionListener {
         Font font = new Font("Arial", Font.BOLD, 30);
         g2d.setFont(font);
         g2d.setColor(Color.BLACK);
-        g2d.drawString("Game is over!", (getWidth() - getFontMetrics(font).stringWidth("Game is over!")) / 2, 150);
+        g2d.drawString("Game over!", (getWidth() - getFontMetrics(font).stringWidth("Game over!")) / 2, 150);
         super.paintChildren(g);
     }
 

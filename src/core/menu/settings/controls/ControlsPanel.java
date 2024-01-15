@@ -2,8 +2,6 @@ package core.menu.settings.controls;
 
 import core.menu.MenuBackgroundPanel;
 import config.ApplicationData;
-import core.menu.settings.controls.ChangeControlPanel;
-import core.menu.settings.controls.ControlsItem;
 import org.jetbrains.annotations.NotNull;
 import utils.ComponentCreator;
 import utils.SoundPlayer;
