@@ -6,26 +6,30 @@ import dto.Square;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
 public class GamePainter {
-    private final static int squareSize;
-    private final static int nextFigureSquareSize;
+    private static int squareSize;
+    private static int nextFigureSquareSize;
     private static BufferedImage[] images;
-    private static final String[] cubeColors;
-    private static final Color[] colors;
+    private static Color[] colors;
+    private static Image menuBackgroundImage;
 
-    static {
+    public static void load() {
         squareSize = ApplicationData.getSquareSize();
         nextFigureSquareSize = ApplicationData.getNextFigureSquareSize();
-        cubeColors = new String[]{"Green", "Yellow", "Purple", "Blue", "Orange", "Turquoise", "Error"};
         colors = new Color[]{new Color(0x059b48), new Color(0xfaaa00), new Color(0xab5ec4),
                 new Color(0x114ec9), new Color(0xce5d25), new Color(0x77b8bf)};
+
+        String[] cubeColors = new String[]{"Green", "Yellow", "Purple", "Blue", "Orange", "Turquoise", "Error"};
         try {
             images = new BufferedImage[cubeColors.length];
             for (int i = 0; i < images.length; ++i) {
@@ -34,6 +38,9 @@ public class GamePainter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        menuBackgroundImage = new ImageIcon(Objects.requireNonNull(GamePainter.class.getResource(
+                "MenuGif.gif"))).getImage();
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int color) {
@@ -105,5 +112,25 @@ public class GamePainter {
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRect((frameWidth - componentWidth) / 2, (frameHeight - componentHeight - 40) / 2,
                 componentWidth, componentHeight);
+    }
+
+    public static void paintMenuBackground(@NotNull Graphics g, int width, int height, String text, ImageObserver observer) {
+        g.drawImage(menuBackgroundImage, 0, 0, width, height, observer);
+
+        Font font = new Font("Arial", Font.BOLD, 50);
+        int textWidth = g.getFontMetrics(font).stringWidth(text);
+
+        Graphics2D g2d = (Graphics2D) g;
+        AffineTransform oldTransform = g2d.getTransform();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.translate((ApplicationData.getApplicationDimension().width - textWidth) / 2, 40);
+        g2d.rotate(-Math.PI / 20);
+
+        g2d.setFont(font);
+        g2d.setColor(new Color(82, 13, 48));
+        g2d.drawString(text, 3, 33);
+        g2d.setColor(new Color(206, 27, 92));
+        g2d.drawString(text, 0, 30);
+        g2d.setTransform(oldTransform);
     }
 }

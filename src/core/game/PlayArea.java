@@ -30,7 +30,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     private PausePanel pausePanel;
     private EndGamePanel endGamePanel;
     private static BufferedImage image;
-    private final HashMap<Integer, String> keyCommands;
+    private static HashMap<Integer, String> keyCommands;
     private final List<ActionListener> actionListeners;
     private Timer pauseKeyTimer;
     private boolean handleKeys;
@@ -38,15 +38,18 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     {
         setupMainPanel();
 
-        keyCommands = ApplicationData.getKeysCommands();
         actionListeners = new ArrayList<>();
+        pauseKeyTimer = new Timer(50, e -> pauseKeyTimer.stop());
+        handleKeys = false;
+    }
+
+    public static void load() {
         try {
-            image = ImageIO.read(new File(Objects.requireNonNull(this.getClass().getResource("PlayAreaBackground.png")).getFile()));
+            image = ImageIO.read(new File(Objects.requireNonNull(PlayArea.class.getResource("PlayAreaBackground.png")).getFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        pauseKeyTimer = new Timer(50, e -> pauseKeyTimer.stop());
-        handleKeys = false;
+        keyCommands = ApplicationData.getKeysCommands();
     }
 
     public void addActionListener(ActionListener actionListener) {

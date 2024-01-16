@@ -2,6 +2,7 @@ package core.menu;
 
 import config.ApplicationData;
 import utils.ComponentCreator;
+import utils.GamePainter;
 import utils.SoundPlayer;
 
 import javax.swing.*;
@@ -12,24 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Menu extends JPanel {
-    private MenuBackgroundPanel mainPanel;
-    private JButton start;
-    private JButton records;
-    private JButton exit;
-    private JButton settings;
     private final List<ActionListener> actionListeners;
     private final Color buttonColor;
 
     {
-        // to remove empty space in the top
-        setBorder(BorderFactory.createEmptyBorder(-5, 0, 0, 0));
+        setPreferredSize(new Dimension(407, 470));
+        setLayout(null);
+        setDoubleBuffered(true);
 
         actionListeners = new ArrayList<>();
         buttonColor = new Color(0x99FCFC);
-        // Lato
 
         createMainPanel();
-        this.add(mainPanel);
     }
 
     public void addActionListener(ActionListener actionListener) {
@@ -40,54 +35,61 @@ public class Menu extends JPanel {
         createStartButton();
         createRecordsButton();
         createSettingsButton();
+        createAboutButton();
         createExitButton();
-
-        mainPanel = new MenuBackgroundPanel("Tetris");
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(30, 0, 30, 0);
-
-        mainPanel.add(start, constraints);
-        mainPanel.add(records, 1, 2);
-        mainPanel.add(settings, 1, 3);
-        mainPanel.add(exit, 1, 4);
-        mainPanel.setPreferredSize(ApplicationData.getApplicationDimension());
     }
 
     private void createStartButton() {
-        start = ComponentCreator.createButton("Start", buttonColor, 4, 26);
-        start.setPreferredSize(new Dimension(150, 50));
-        start.addActionListener(e -> {
+        JButton startButton = ComponentCreator.createButton("Start", buttonColor, 4, 26);
+        startButton.setBounds(128, 90, 150, 50);
+        startButton.addActionListener(e -> {
             SoundPlayer.playPressedStartButtonMusic();
             ActionEvent actionEvent = new ActionEvent(this, 1, "start game");
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
         });
-        start.removeActionListener(ApplicationData.getButtonClickPlayer());
+        startButton.removeActionListener(ApplicationData.getButtonClickPlayer());
+        this.add(startButton);
     }
 
     private void createRecordsButton() {
-        records = ComponentCreator.createButton("Records", buttonColor, 4, 26);
-        records.setPreferredSize(new Dimension(150, 50));
-        records.addActionListener(e -> {
+        JButton recordsButton = ComponentCreator.createButton("Records", buttonColor, 4, 26);
+        recordsButton.setBounds(128, 160, 150, 50);
+        recordsButton.addActionListener(e -> {
             ActionEvent actionEvent = new ActionEvent(this, 1, "open records");
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
         });
+        this.add(recordsButton);
     }
 
     private void createSettingsButton() {
-        settings = ComponentCreator.createButton("Settings", buttonColor, 4, 26);
-        settings.setPreferredSize(new Dimension(150, 50));
-        settings.addActionListener(e -> {
+        JButton settingsButton = ComponentCreator.createButton("Settings", buttonColor, 4, 26);
+        settingsButton.setBounds(128, 230, 150, 50);
+        settingsButton.addActionListener(e -> {
             ActionEvent actionEvent = new ActionEvent(this, 1, "open settings");
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
         });
+        this.add(settingsButton);
+    }
+
+    private void createAboutButton() {
+        JButton aboutButton = ComponentCreator.createButton("About", buttonColor, 4, 26);
+        aboutButton.setBounds(128, 300, 150, 50);
+        aboutButton.addActionListener(e -> {
+            // TODO : about window
+        });
+        this.add(aboutButton);
     }
 
     private void createExitButton() {
-        exit = ComponentCreator.createButton("Exit", buttonColor, 4, 26);
-        exit.setPreferredSize(new Dimension(150, 50));
-        exit.addActionListener(e -> System.exit(0));
+        JButton exitButton = ComponentCreator.createButton("Exit", buttonColor, 4, 26);
+        exitButton.setBounds(128, 370, 150, 50);
+        exitButton.addActionListener(e -> System.exit(0));
+        this.add(exitButton);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), "Menu", this);
     }
 }

@@ -21,6 +21,7 @@ public class ControlsItem extends JComponent implements ActionListener {
 
     {
         setLayout(null);
+        setSize(new Dimension(250, 25));
         setPreferredSize(new Dimension(250, 25));
 
         actionListeners = new ArrayList<>();

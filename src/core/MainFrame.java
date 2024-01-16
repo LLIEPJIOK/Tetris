@@ -24,7 +24,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private final JPanel cardPanel;
 
     {
-        SoundPlayer.loadMusic();
+        ApplicationData.loadGameStuff();
 
         menu = new Menu();
         menu.addActionListener(this);
@@ -60,7 +60,7 @@ public class MainFrame extends JFrame implements ActionListener {
             }
         });
         addKeyListener(playArea);
-        addKeyListener(settings.getControlsPanel());
+        addKeyListener(settings.getControls());
         setFocusTraversalKeysEnabled(false);
 
         SoundPlayer.playMenuMusic();

@@ -1,8 +1,12 @@
 package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.game.Field;
+import core.game.PlayArea;
 import utils.ButtonClickPlayer;
 import lombok.Getter;
+import utils.GamePainter;
+import utils.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,39 +17,25 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ApplicationData {
-    private static final ObjectMapper objectMapper;
-    private static final File file;
+    private static ObjectMapper objectMapper;
+    private static File file;
     private static SavableApplicationData savableData;
     @Getter
-    private static final Dimension applicationDimension;
+    private static Dimension applicationDimension;
     @Getter
-    private final static int squareSize;
+    private static int squareSize;
     @Getter
-    private final static int nextFigureSquareSize;
+    private static int nextFigureSquareSize;
     @Getter
-    private final static int fieldWidth;
+    private static int fieldWidth;
     @Getter
-    private final static int fieldHeight;
+    private static int fieldHeight;
     @Getter
-    private static final ButtonClickPlayer buttonClickPlayer;
+    private static ButtonClickPlayer buttonClickPlayer;
     @Getter
-    private static final List<Integer> records;
+    private static List<Integer> records;
 
     static {
-        objectMapper = new ObjectMapper();
-        file = new File("src/config/config.json");
-
-        load();
-
-        applicationDimension = new Dimension(420, 500);
-        squareSize = 20;
-        nextFigureSquareSize = 14;
-        fieldWidth = 10;
-        fieldHeight = 20;
-        buttonClickPlayer = new ButtonClickPlayer();
-        records = savableData.getRecords();
-
-        UIManager.getDefaults().put("Button.disabledText", Color.BLACK);
     }
 
     public static int getMenuVolume() {
@@ -97,6 +87,28 @@ public class ApplicationData {
         }
         findPlaceForLastRecord();
         save();
+    }
+
+    public static void loadGameStuff() {
+        objectMapper = new ObjectMapper();
+        file = new File("src/config/config.json");
+
+        load();
+
+        applicationDimension = new Dimension(420, 500);
+        squareSize = 20;
+        nextFigureSquareSize = 14;
+        fieldWidth = 10;
+        fieldHeight = 20;
+        buttonClickPlayer = new ButtonClickPlayer();
+        records = savableData.getRecords();
+
+        UIManager.getDefaults().put("Button.disabledText", Color.BLACK);
+
+        SoundPlayer.loadMusic();
+        GamePainter.load();
+        PlayArea.load();
+        Field.load();
     }
 
     private static void load() {

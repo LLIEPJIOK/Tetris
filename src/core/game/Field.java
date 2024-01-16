@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Field extends JPanel {
-    private final static int squareSize;
-    private final static int fieldWidth;
-    private final static int fieldHeight;
+    private static int squareSize;
+    private static int fieldWidth;
+    private static int fieldHeight;
     private int[][] spaces;
     private Figure curFigure;
     private Figure landingFigure;
@@ -40,8 +40,8 @@ public class Field extends JPanel {
     private float lastFigurePaintTimes;
     private static BufferedImage image;
     private static BufferedImage extraImage;
-    private static final int[] speeds;
-    private static final int[] neededLines;
+    private static int[] speeds;
+    private static int[] neededLines;
     private int curSpeed;
     private int lines;
     private float brightness;
@@ -49,11 +49,7 @@ public class Field extends JPanel {
     private final List<ActionListener> actionListeners;
 
     static {
-        squareSize = ApplicationData.getSquareSize();
-        fieldWidth = ApplicationData.getFieldWidth();
-        fieldHeight = ApplicationData.getFieldHeight();
-        speeds = new int[]{500, 250, 100, 50, 20};
-        neededLines = new int[]{0, 40, 80, 120, 160};
+
     }
 
     {
@@ -64,14 +60,22 @@ public class Field extends JPanel {
         });
         lastFigureTimer = new Timer(50, e -> lastFigureTimerFunction());
         changeBrightnessTimer = new Timer(10, e -> changeSpeedTimerFunction());
+
+        setSize(new Dimension(fieldWidth * squareSize, fieldHeight * squareSize));
+    }
+
+    public static void load() {
+        squareSize = ApplicationData.getSquareSize();
+        fieldWidth = ApplicationData.getFieldWidth();
+        fieldHeight = ApplicationData.getFieldHeight();
+        speeds = new int[]{500, 250, 100, 50, 20};
+        neededLines = new int[]{0, 40, 80, 120, 160};
         try {
-            image = ImageIO.read(new File(Objects.requireNonNull(this.getClass().getResource("GameBackground.jpg")).getFile()));
+            image = ImageIO.read(new File(Objects.requireNonNull(Field.class.getResource("GameBackground.jpg")).getFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         extraImage = image;
-
-        setSize(new Dimension(fieldWidth * squareSize, fieldHeight * squareSize));
     }
 
     public void addActionListener(ActionListener listener) {
