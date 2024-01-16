@@ -14,6 +14,9 @@ public class SoundPlayer {
     private static Clip pressedButtonMusic;
     private static Clip pressedStartButtonMusic;
     private static Clip pressedBackButtonMusic;
+    private static Clip gameOverMusic;
+    private static Clip changeSpeedMusic;
+    private static Clip dropMusic;
 
     public static void loadMusic() {
         menuMusic = loadMusic("music/BackMusic.wav");
@@ -23,6 +26,9 @@ public class SoundPlayer {
         pressedButtonMusic = loadMusic("music/ButtonPressed.wav");
         pressedStartButtonMusic = loadMusic("music/StartButtonPressed.wav");
         pressedBackButtonMusic = loadMusic("music/BackButtonPressed.wav");
+        gameOverMusic = loadMusic("music/GameOver.wav");
+        changeSpeedMusic = loadMusic("music/ChangeSpeed.wav");
+        dropMusic = loadMusic("music/DropSound.wav");
     }
 
     private static AudioInputStream createAudioInputStream(String fileName) throws UnsupportedAudioFileException, IOException {
@@ -43,6 +49,7 @@ public class SoundPlayer {
 
     private static void playMusicInLoop(Clip clip) {
         if (clip != null) {
+            clip.setFramePosition(0);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
@@ -82,6 +89,18 @@ public class SoundPlayer {
         playMusic(pressedBackButtonMusic);
     }
 
+    public static void playGameOverMusic() {
+        playMusic(gameOverMusic);
+    }
+
+    public static void playChangeSpeedMusic() {
+        playMusic(changeSpeedMusic);
+    }
+
+    public static void playDropMusic() {
+        playMusic(dropMusic);
+    }
+
     private static void stopMusic(Clip clip) {
         if (clip != null && clip.isRunning()) {
             clip.stop();
@@ -102,8 +121,16 @@ public class SoundPlayer {
     }
 
     public static void setGameVolume(int volume) {
+        float value = volume / 100f * 86f - 80f;
+
         FloatControl control = (FloatControl) gameMusic.getControl(FloatControl.Type.MASTER_GAIN);
-        control.setValue(volume / 100f * 86f - 80f);
+        control.setValue(value);
+
+        control = (FloatControl) gameOverMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(value);
+
+        control = (FloatControl) dropMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(value);
     }
 
     public static void setEffectsVolume(int volume) {

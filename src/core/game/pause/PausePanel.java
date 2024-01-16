@@ -61,6 +61,7 @@ public class PausePanel extends JPanel implements ActionListener {
         if (e.getSource() == resumeButton) {
             ActionEvent actionEvent = new ActionEvent(this, 1, "resume game");
             actionListeners.forEach(actionListener -> actionListener.actionPerformed(actionEvent));
+            setVisible(false);
             return;
         }
         if (e.getSource() == settingsButton) {

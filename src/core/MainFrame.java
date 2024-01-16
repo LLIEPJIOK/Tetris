@@ -70,17 +70,14 @@ public class MainFrame extends JFrame implements ActionListener {
     public void actionPerformed(@NotNull ActionEvent e) {
         switch (e.getActionCommand()) {
             case "start game" -> {
+                SoundPlayer.stopMenuMusic();
                 playArea.startNewGame();
                 CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
                 cardLayout.show(cardPanel, "PlayArea");
-                SoundPlayer.stopMenuMusic();
-                SoundPlayer.playGameMusic();
             }
             case "open menu" -> {
                 CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
                 cardLayout.show(cardPanel, "Menu");
-                SoundPlayer.stopGameMusic();
-                SoundPlayer.playMenuMusic();
             }
             case "open records" -> {
                 records.setupRecords();

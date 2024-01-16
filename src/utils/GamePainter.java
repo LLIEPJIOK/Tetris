@@ -18,11 +18,14 @@ public class GamePainter {
     private final static int nextFigureSquareSize;
     private static BufferedImage[] images;
     private static final String[] cubeColors;
+    private static final Color[] colors;
 
     static {
         squareSize = ApplicationData.getSquareSize();
         nextFigureSquareSize = ApplicationData.getNextFigureSquareSize();
         cubeColors = new String[]{"Green", "Yellow", "Purple", "Blue", "Orange", "Turquoise", "Error"};
+        colors = new Color[]{new Color(0x059b48), new Color(0xfaaa00), new Color(0xab5ec4),
+                new Color(0x114ec9), new Color(0xce5d25), new Color(0x77b8bf)};
         try {
             images = new BufferedImage[cubeColors.length];
             for (int i = 0; i < images.length; ++i) {
@@ -34,11 +37,11 @@ public class GamePainter {
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int color) {
-        g.drawImage(images[color - 1],x * squareSize, y * squareSize, squareSize, squareSize, null);
+        g.drawImage(images[color - 1], x * squareSize, y * squareSize, squareSize, squareSize, null);
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int dx, int dy, int size, int color) {
-        g.drawImage(images[color - 1],x * size + dx, y * size + dy, size, size, null);
+        g.drawImage(images[color - 1], x * size + dx, y * size + dy, size, size, null);
     }
 
     public static void paintCurFigure(Graphics g, @NotNull Figure figure, int dx, int dy) {
@@ -68,8 +71,24 @@ public class GamePainter {
         Graphics2D graphics = (Graphics2D) g;
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
         for (Square square : figure.getSquares()) {
-            graphics.drawImage(images[6],square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize, null);
+            graphics.drawImage(images[6], square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize, null);
         }
+    }
+
+    public static void paintLandingFigure(@NotNull Graphics g, @NotNull Figure figure, Square left, Square right) {
+        Color color = colors[figure.getColor() - 1];
+        Color transparentColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 70);
+
+        g.setColor(colors[figure.getColor() - 1]);
+        for (Square square : figure.getSquares()) {
+            g.drawRect(square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize);
+        }
+
+        g.setColor(transparentColor);
+        Square l = figure.getLeftSquare();
+        Square r = figure.getRightSquare();
+        g.drawLine(left.getX() * squareSize, (left.getY() + 1) * squareSize, left.getX() * squareSize, l.getY() * squareSize);
+        g.drawLine((right.getX() + 1) * squareSize, (right.getY() + 1) * squareSize, (right.getX() + 1) * squareSize, r.getY() * squareSize);
     }
 
     public static void paintUnderFrame(@NotNull Graphics g, int frameWidth, int frameHeight,

@@ -147,8 +147,30 @@ public class Figure {
         return rotatedSquares;
     }
 
+    public Square getRightSquare() {
+        Square right = new Square(0, 0);
+        for (Square square : squares) {
+            if (square.getX() > right.getX() || square.getX() == right.getX() && square.getY() > right.getY()) {
+                right = square;
+            }
+        }
+        return right;
+    }
+
+    public Square getLeftSquare() {
+        Square left = new Square(10, 10);
+        for (Square square : squares) {
+            if (square.getX() < left.getX() || square.getX() == left.getX() && square.getY() > left.getY()) {
+                left = square;
+            }
+        }
+        return left;
+    }
+
     public static void copy(@NotNull Figure src, @NotNull Figure dest) {
-        System.arraycopy(src.squares, 0, dest.squares, 0, 4);
+        for (int i = 0; i < 4; ++i) {
+            dest.squares[i] = new Square(src.squares[i].getX(), src.squares[i].getY());
+        }
         dest.type = src.type;
         dest.color = src.color;
     }

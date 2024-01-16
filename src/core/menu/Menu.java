@@ -25,7 +25,8 @@ public class Menu extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(-5, 0, 0, 0));
 
         actionListeners = new ArrayList<>();
-        buttonColor = new Color(0xFFE3C755, true);
+        buttonColor = new Color(0x99FCFC);
+        // Lato
 
         createMainPanel();
         this.add(mainPanel);

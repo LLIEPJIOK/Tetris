@@ -24,7 +24,9 @@ public class ComponentCreator {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                SoundPlayer.playHoverButtonMusic();
+                if (button.isEnabled()) {
+                    SoundPlayer.playHoverButtonMusic();
+                }
             }
         });
         button.addActionListener(ApplicationData.getButtonClickPlayer());
@@ -33,7 +35,7 @@ public class ComponentCreator {
 
     public static @NotNull JLabel createLabel(String text, int borderThickness, int fontSize) {
         JLabel label = new JLabel(text);
-        Border border = new LineBorder(new Color(0, 0, 0, 200), borderThickness, false);
+        Border border = new LineBorder(new Color(0, 0, 0), borderThickness, false);
         label.setBorder(border);
         Font font = new Font("Arial",  Font.PLAIN, fontSize);
         label.setFont(font);

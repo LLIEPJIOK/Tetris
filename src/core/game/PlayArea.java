@@ -8,6 +8,7 @@ import dto.ScoreEvent;
 import org.jetbrains.annotations.NotNull;
 import utils.GamePainter;
 import utils.ComponentCreator;
+import utils.SoundPlayer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -69,6 +70,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         pauseButton.addActionListener(this);
         this.add(pauseButton);
     }
+
     private void setupScoreLabels() {
         JLabel scoreLabel = ComponentCreator.createLabel("Score", 0, 18);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -128,6 +130,9 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         scoreNumberLabel.setText("0");
         field.startNewGame();
         handleKeys = true;
+        pauseButton.setEnabled(true);
+        pausePanel.setVisible(false);
+        SoundPlayer.playGameMusic();
     }
 
     public void returnToGame() {
@@ -159,6 +164,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
         String command = keyCommands.get(e.getKeyCode());
         if (command.equals("Pause/Resume")) {
             if (!pauseKeyTimer.isRunning()) {
+                pauseButton.setEnabled(true);
                 pauseButton.doClick();
                 pauseKeyTimer.start();
             }
@@ -169,7 +175,10 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
                 case "Move right" -> field.moveRight();
                 case "Rotate left" -> field.rotateLeft();
                 case "Rotate right" -> field.rotateRight();
-                case "Drop" -> field.drop();
+                case "Drop" -> {
+                    field.drop();
+                    SoundPlayer.playDropMusic();
+                }
             }
             field.repaint();
         }
@@ -188,15 +197,15 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(@NotNull ActionEvent e) {
         if (e.getSource() == pauseButton) {
-            pauseButton.changeType();
-            pausePanel.setVisible(pauseButton.getType() == 1);
-            if (pauseButton.getType() == 0) {
-                field.resumeGame();
-            } else {
+            if (!pausePanel.isVisible()) {
+                pausePanel.setVisible(true);
                 field.pauseGame();
+                pauseButton.setEnabled(false);
+                this.setComponentZOrder(pausePanel, 0);
+            } else {
+                pausePanel.setVisible(false);
+                field.resumeGame();
             }
-            this.setComponentZOrder(pausePanel, 0);
-            this.setComponentZOrder(pauseButton, 0);
             return;
         }
         if (e instanceof ScoreEvent scoreEvent) {
@@ -210,15 +219,20 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
             case "open menu" -> {
                 actionListeners.forEach(actionListener -> actionListener.actionPerformed(e));
                 pauseButton.doClick();
+                SoundPlayer.stopGameMusic();
+                SoundPlayer.playMenuMusic();
             }
             case "open settings" -> {
                 actionListeners.forEach(actionListener -> actionListener.actionPerformed(e));
                 handleKeys = false;
             }
-            case "resume game" -> pauseButton.doClick();
+            case "resume game" -> {
+                pauseButton.setEnabled(true);
+                pauseButton.doClick();
+            }
             case "repaint" -> repaint();
             case "end game" -> {
-                handleKeys = false;
+                pauseButton.setEnabled(false);
 
                 endGamePanel.setScore(getScore());
                 endGamePanel.setLines(Integer.parseInt(linesNumberLabel.getText()));
