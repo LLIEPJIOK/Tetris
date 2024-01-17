@@ -21,7 +21,6 @@ public class SoundPanel extends JPanel implements ActionListener {
     private final List<ActionListener> actionListeners;
 
     {
-        setPreferredSize(new Dimension(407, 470));
         setDoubleBuffered(true);
         setLayout(null);
 
@@ -66,7 +65,8 @@ public class SoundPanel extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), "Sound", this);
+        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
+        GamePainter.paintTextWithShadow(g, 40, "Sound", new Color(206, 27, 92), new Color(82, 13, 48), 50);
     }
 
     @Override

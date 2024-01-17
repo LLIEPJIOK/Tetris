@@ -21,7 +21,6 @@ public class SettingsPanel extends JPanel implements ActionListener {
     private final List<ActionListener> actionListeners;
 
     {
-        setPreferredSize(new Dimension(407, 470));
         setDoubleBuffered(true);
         setLayout(null);
 
@@ -39,7 +38,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
     private void setupSoundButton() {
         soundButton = ComponentCreator.createButton("Sound", buttonColor, 4, 26);
-        soundButton.setBounds(135, 163, 150, 50);
+        soundButton.setBounds(128, 163, 150, 50);
         soundButton.setPreferredSize(new Dimension(150, 50));
         soundButton.addActionListener(this);
         this.add(soundButton);
@@ -47,7 +46,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
 
     private void setupControlsButton() {
         controlsButton = ComponentCreator.createButton("Controls", buttonColor, 4, 26);
-        controlsButton.setBounds(135, 243, 150, 50);
+        controlsButton.setBounds(128, 243, 150, 50);
         controlsButton.addActionListener(this);
         this.add(controlsButton);
     }
@@ -63,7 +62,8 @@ public class SettingsPanel extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), "Settings", this);
+        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
+        GamePainter.paintTextWithShadow(g, 40, "Settings", new Color(206, 27, 92), new Color(82, 13, 48), 50);
     }
 
 

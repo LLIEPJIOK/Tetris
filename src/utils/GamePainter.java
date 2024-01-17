@@ -11,15 +11,16 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 
 public class GamePainter {
     private static int squareSize;
     private static int nextFigureSquareSize;
-    private static BufferedImage[] images;
+    private static List<HashMap<Float, BufferedImage>> images;
     private static Color[] colors;
     private static Image menuBackgroundImage;
 
@@ -30,10 +31,19 @@ public class GamePainter {
                 new Color(0x114ec9), new Color(0xce5d25), new Color(0x77b8bf)};
 
         String[] cubeColors = new String[]{"Green", "Yellow", "Purple", "Blue", "Orange", "Turquoise", "Error"};
+        images = new ArrayList<>();
         try {
-            images = new BufferedImage[cubeColors.length];
-            for (int i = 0; i < images.length; ++i) {
-                images[i] = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("cubes/" + cubeColors[i] + ".png")).getFile()));
+            BufferedImage image;
+            for (int i = 0; i < cubeColors.length; ++i) {
+                images.add(new HashMap<>());
+                image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("cubes/" + cubeColors[i] + ".png")).getFile()));
+                float brightness = 1;
+                while (brightness <= 21) {
+                    RescaleOp rescaleOp = new RescaleOp(brightness, 0, null);
+                    BufferedImage brightnessImage = rescaleOp.filter(image, null);
+                    images.get(i).put(brightness, brightnessImage);
+                    brightness += 2f;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,11 +54,15 @@ public class GamePainter {
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int color) {
-        g.drawImage(images[color - 1], x * squareSize, y * squareSize, squareSize, squareSize, null);
+        g.drawImage(images.get(color-1).get(1f), x * squareSize, y * squareSize, squareSize, squareSize, null);
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int dx, int dy, int size, int color) {
-        g.drawImage(images[color - 1], x * size + dx, y * size + dy, size, size, null);
+        g.drawImage(images.get(color-1).get(1f), x * size + dx, y * size + dy, size, size, null);
+    }
+
+    public static void paintSquare(@NotNull Graphics g, int x, int y, int dx, int dy, int size, int color, float brightness) {
+        g.drawImage(images.get(color-1).get(brightness), x * size + dx, y * size + dy, size, size, null);
     }
 
     public static void paintCurFigure(Graphics g, @NotNull Figure figure, int dx, int dy) {
@@ -78,7 +92,7 @@ public class GamePainter {
         Graphics2D graphics = (Graphics2D) g;
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
         for (Square square : figure.getSquares()) {
-            graphics.drawImage(images[6], square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize, null);
+            graphics.drawImage(images.get(6).get(1f), square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize, null);
         }
     }
 
@@ -114,23 +128,25 @@ public class GamePainter {
                 componentWidth, componentHeight);
     }
 
-    public static void paintMenuBackground(@NotNull Graphics g, int width, int height, String text, ImageObserver observer) {
-        g.drawImage(menuBackgroundImage, 0, 0, width, height, observer);
-
-        Font font = new Font("Arial", Font.BOLD, 50);
+    public static void paintTextWithShadow(@NotNull Graphics g, int y, String text, Color textColor, Color shadowColor, int fontSize) {
+        Font font = new Font("Arial", Font.BOLD, fontSize);
         int textWidth = g.getFontMetrics(font).stringWidth(text);
 
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform oldTransform = g2d.getTransform();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.translate((ApplicationData.getApplicationDimension().width - textWidth) / 2, 40);
+        g2d.translate((407 - textWidth) / 2, y);
         g2d.rotate(-Math.PI / 20);
 
         g2d.setFont(font);
-        g2d.setColor(new Color(82, 13, 48));
+        g2d.setColor(shadowColor);
         g2d.drawString(text, 3, 33);
-        g2d.setColor(new Color(206, 27, 92));
+        g2d.setColor(textColor);
         g2d.drawString(text, 0, 30);
         g2d.setTransform(oldTransform);
+    }
+
+    public static void paintMenuBackground(@NotNull Graphics g, int width, int height, ImageObserver observer) {
+        g.drawImage(menuBackgroundImage, 0, 0, width, height, observer);
     }
 }

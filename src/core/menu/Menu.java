@@ -17,7 +17,6 @@ public class Menu extends JPanel {
     private final Color buttonColor;
 
     {
-        setPreferredSize(new Dimension(407, 470));
         setLayout(null);
         setDoubleBuffered(true);
 
@@ -90,6 +89,7 @@ public class Menu extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), "Menu", this);
+        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
+        GamePainter.paintTextWithShadow(g, 40, "Menu", new Color(206, 27, 92), new Color(82, 13, 48), 50);
     }
 }

@@ -24,7 +24,6 @@ public class Controls extends JLayeredPane implements ActionListener, KeyListene
     private final List<ActionListener> actionListeners;
 
     {
-        setPreferredSize(new Dimension(407, 470));
         setDoubleBuffered(true);
 
         setupControlsPanel();

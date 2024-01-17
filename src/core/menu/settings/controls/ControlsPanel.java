@@ -20,7 +20,7 @@ public class ControlsPanel extends JPanel implements ActionListener {
     private final List<ActionListener> actionListeners;
 
     {
-        setSize(new Dimension(407, 470));
+        setSize(new Dimension(407, 464));
         setDoubleBuffered(true);
         setLayout(null);
 
@@ -58,7 +58,8 @@ public class ControlsPanel extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), "Controls", this);
+        GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
+        GamePainter.paintTextWithShadow(g, 40, "Controls", new Color(206, 27, 92), new Color(82, 13, 48), 50);
     }
 
     @Override
