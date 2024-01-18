@@ -10,6 +10,7 @@ import utils.SoundPlayer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +18,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 public class Field extends JPanel {
     private static int squareSize;
@@ -35,6 +34,8 @@ public class Field extends JPanel {
     private final Timer lastFigureTimer;
     private Timer stoppedTimer;
     private final Timer changeBrightnessTimer;
+    private final Timer brightnessLineTimer;
+    private final Timer removeLineTimer;
     private float lastFigureTransparency;
     private float lastFigureDTransparency;
     private float lastFigurePaintTimes;
@@ -46,11 +47,10 @@ public class Field extends JPanel {
     private int lines;
     private float brightness;
     private float dBrightness;
+    private float brightnessLine;
+    private float lineOpacity;
+    private final HashSet<Integer> linesSet;
     private final List<ActionListener> actionListeners;
-
-    static {
-
-    }
 
     {
         actionListeners = new ArrayList<>();
@@ -60,6 +60,12 @@ public class Field extends JPanel {
         });
         lastFigureTimer = new Timer(50, e -> lastFigureTimerFunction());
         changeBrightnessTimer = new Timer(10, e -> changeSpeedTimerFunction());
+        brightnessLineTimer = new Timer(5, e -> brightnessLineTimerFunction());
+        removeLineTimer = new Timer(5, e -> removeLineTimerFunction());
+
+        linesSet = new HashSet<>();
+        brightnessLine = 1;
+        lineOpacity = 1;
 
         setSize(new Dimension(fieldWidth * squareSize, fieldHeight * squareSize));
     }
@@ -149,10 +155,34 @@ public class Field extends JPanel {
         } else if (brightness <= 1) {
             brightness = 1;
             changeBrightnessTimer.stop();
-            repaint();
         }
         RescaleOp rescaleOp = new RescaleOp(brightness, 0, null);
         image = rescaleOp.filter(extraImage, null);
+        repaint();
+    }
+
+    private void brightnessLineTimerFunction() {
+        brightnessLine += 4f;
+        if (brightnessLine == 41) {
+            brightnessLineTimer.stop();
+            removeLineTimer.start();
+        }
+        repaint();
+    }
+
+    private void removeLineTimerFunction() {
+        lineOpacity -= 0.2f;
+        if (lineOpacity <= 0) {
+            lineOpacity = 0;
+            removeLineTimer.stop();
+            nextFigure();
+            removeFullLines();
+            if (stoppedTimer != timer) {
+                timer.start();
+            }
+            brightnessLine = 1;
+            lineOpacity = 1;
+        }
         repaint();
     }
 
@@ -160,9 +190,7 @@ public class Field extends JPanel {
         while (isInEmptySpace(landingFigure.getSquares())) {
             landingFigure.moveDown();
         }
-        while (!isInEmptySpace(landingFigure.getSquares())) {
-            landingFigure.moveUp();
-        }
+        landingFigure.moveUp();
     }
 
     private boolean isInEmptySpace(Square[] squares) {
@@ -200,23 +228,37 @@ public class Field extends JPanel {
         }
     }
 
-    private void clearFullLines() {
-        int lines = 0;
+    private void removeFullLines() {
+        for (Integer i : linesSet) {
+            clearLine(i);
+        }
+        addLines(linesSet.size());
+        ScoreEvent scoreEvent = new ScoreEvent(this, linesSet.size());
+        notifyListeners(scoreEvent);
+        linesSet.clear();
+    }
+
+    private void findFullLines() {
         for (int i = 0; i < fieldHeight; i++) {
             for (int j = 0; j < fieldWidth; j++) {
                 if (spaces[i][j] == 0) {
                     break;
                 }
                 if (j + 1 == fieldWidth) {
-                    clearLine(i);
-                    ++lines;
+                    linesSet.add(i);
                 }
             }
         }
-        if (lines != 0) {
-            addLines(lines);
-            ScoreEvent scoreEvent = new ScoreEvent(this, lines);
-            notifyListeners(scoreEvent);
+        if (!linesSet.isEmpty()) {
+            if (curSpeed < 2) {
+                timer.stop();
+                brightnessLineTimer.start();
+            } else {
+                removeFullLines();
+                nextFigure();
+            }
+        } else {
+            nextFigure();
         }
     }
 
@@ -227,9 +269,7 @@ public class Field extends JPanel {
         lastFigureTimer.start();
     }
 
-    public void handleFigureLanding() {
-        saveInField(curFigure.getSquares(), curFigure.getColor());
-        clearFullLines();
+    private void nextFigure() {
         Figure.copy(nextFigure, curFigure);
         if (!isInEmptySpace(nextFigure.getSquares())) {
             timer.stop();
@@ -243,6 +283,11 @@ public class Field extends JPanel {
         nextFigure.generateFigure(fieldWidth / 2 - 1);
         ActionEvent actionEvent = new ActionEvent(this, 1, "repaint");
         notifyListeners(actionEvent);
+    }
+
+    public void handleFigureLanding() {
+        saveInField(curFigure.getSquares(), curFigure.getColor());
+        findFullLines();
     }
 
     public void moveLeft() {
@@ -314,18 +359,27 @@ public class Field extends JPanel {
             g.drawLine(0, i * squareSize, getWidth(), i * squareSize);
         }
 
+        Graphics2D g2d = (Graphics2D) g;
         for (int i = 0; i < fieldHeight; ++i) {
+            if (linesSet.contains(i)) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, lineOpacity));
+            }
             for (int j = 0; j < fieldWidth; ++j) {
                 if (spaces[i][j] != 0) {
-                    GamePainter.paintSquare(g, j, i, spaces[i][j]);
+                    if (linesSet.contains(i)) {
+                        GamePainter.paintSquare(g, j, i, 0, 0, squareSize, spaces[i][j], brightnessLine);
+                    } else {
+                        GamePainter.paintSquare(g, j, i, spaces[i][j]);
+                    }
                 }
             }
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
         }
 
-        if (timer.isRunning()) {
+        if (timer.isRunning() || stoppedTimer == timer) {
             GamePainter.paintCurFigure(g, curFigure, 0, 0);
             GamePainter.paintLandingFigure(g, landingFigure, curFigure.getLeftSquare(), curFigure.getRightSquare());
-        } else if (lastFigureTimer.isRunning()) {
+        } else if (lastFigureTimer.isRunning() || stoppedTimer == lastFigureTimer) {
             GamePainter.paintLastFigure(g, curFigure, lastFigureTransparency);
         }
     }

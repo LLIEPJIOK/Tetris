@@ -16,7 +16,7 @@ public class ScoreEvent extends ActionEvent {
             case 2 -> score = 300;
             case 3 -> score = 700;
             case 4 -> score = 1500;
-            default -> throw new RuntimeException("illegal number of lines");
+            default -> throw new RuntimeException("illegal number of lines: " + lines);
         }
     }
 }

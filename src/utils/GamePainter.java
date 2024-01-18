@@ -38,7 +38,7 @@ public class GamePainter {
                 images.add(new HashMap<>());
                 image = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("cubes/" + cubeColors[i] + ".png")).getFile()));
                 float brightness = 1;
-                while (brightness <= 21) {
+                while (brightness <= 41) {
                     RescaleOp rescaleOp = new RescaleOp(brightness, 0, null);
                     BufferedImage brightnessImage = rescaleOp.filter(image, null);
                     images.get(i).put(brightness, brightnessImage);
@@ -89,10 +89,10 @@ public class GamePainter {
     }
 
     public static void paintLastFigure(Graphics g, @NotNull Figure figure, float transparency) {
-        Graphics2D graphics = (Graphics2D) g;
-        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
         for (Square square : figure.getSquares()) {
-            graphics.drawImage(images.get(6).get(1f), square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize, null);
+            g2d.drawImage(images.get(6).get(1f), square.getX() * squareSize, square.getY() * squareSize, squareSize, squareSize, null);
         }
     }
 
