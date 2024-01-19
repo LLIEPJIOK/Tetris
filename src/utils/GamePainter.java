@@ -23,6 +23,7 @@ public class GamePainter {
     private static List<HashMap<Float, BufferedImage>> images;
     private static Color[] colors;
     private static Image menuBackgroundImage;
+    private static Image underFrameBackground;
 
     public static void load() {
         squareSize = ApplicationData.getSquareSize();
@@ -45,6 +46,7 @@ public class GamePainter {
                     brightness += 2f;
                 }
             }
+            underFrameBackground = ImageIO.read(new File(Objects.requireNonNull(GamePainter.class.getResource("UnderFrameBackground.jpg")).getFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,15 +56,15 @@ public class GamePainter {
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int color) {
-        g.drawImage(images.get(color-1).get(1f), x * squareSize, y * squareSize, squareSize, squareSize, null);
+        g.drawImage(images.get(color - 1).get(1f), x * squareSize, y * squareSize, squareSize, squareSize, null);
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int dx, int dy, int size, int color) {
-        g.drawImage(images.get(color-1).get(1f), x * size + dx, y * size + dy, size, size, null);
+        g.drawImage(images.get(color - 1).get(1f), x * size + dx, y * size + dy, size, size, null);
     }
 
     public static void paintSquare(@NotNull Graphics g, int x, int y, int dx, int dy, int size, int color, float brightness) {
-        g.drawImage(images.get(color-1).get(brightness), x * size + dx, y * size + dy, size, size, null);
+        g.drawImage(images.get(color - 1).get(brightness), x * size + dx, y * size + dy, size, size, null);
     }
 
     public static void paintCurFigure(Graphics g, @NotNull Figure figure, int dx, int dy) {
@@ -116,16 +118,7 @@ public class GamePainter {
                                        int componentWidth, int componentHeight) {
         g.setColor(new Color(0, 0, 0, 150));
         g.fillRect(0, 0, frameWidth, frameHeight);
-
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(new Color(220, 220, 220));
-        g2d.fillRect((frameWidth - componentWidth) / 2, (frameHeight - componentHeight - 40) / 2,
-                componentWidth, componentHeight);
-
-        g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.drawRect((frameWidth - componentWidth) / 2, (frameHeight - componentHeight - 40) / 2,
-                componentWidth, componentHeight);
+        g.drawImage(underFrameBackground, (frameWidth - componentWidth) / 2, (frameHeight - componentHeight) / 2, componentWidth, componentHeight, null);
     }
 
     public static void paintTextWithShadow(@NotNull Graphics g, int y, String text, Color textColor, Color shadowColor, int fontSize) {

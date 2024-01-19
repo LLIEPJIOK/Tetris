@@ -1,5 +1,6 @@
 package core.menu.settings.controls;
 
+import core.menu.MenuButton;
 import org.jetbrains.annotations.NotNull;
 import config.ApplicationData;
 import utils.GamePainter;
@@ -15,8 +16,8 @@ import java.util.List;
 
 public class ChangeControlPanel extends JPanel implements ActionListener {
     private JLabel keyLabel;
-    private JButton acceptButton;
-    private JButton cancelButton;
+    private MenuButton acceptButton;
+    private MenuButton cancelButton;
     private int key;
     private final Font font;
     private String name;
@@ -29,8 +30,7 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
     private final List<ActionListener> actionListeners;
 
     {
-        setSize(ApplicationData.getApplicationDimension());
-        setPreferredSize(ApplicationData.getApplicationDimension());
+        setSize(407, 464);
         setLayout(null);
         setOpaque(false);
         setFocusable(false);
@@ -39,10 +39,10 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
         setupAcceptButton();
         setupCancelButton();
 
-        font = new Font("Arial", Font.BOLD, 25);
+        font = ApplicationData.getFont(Font.BOLD, 25);
         name = "";
 
-        usedKeyFont = new Font("Arial", Font.PLAIN, 14);
+        usedKeyFont = ApplicationData.getFont(Font.BOLD, 14);
         usedButtonText = "This key is already in use!";
         usedButtonWidth = getFontMetrics(usedKeyFont).stringWidth(usedButtonText);
 
@@ -61,7 +61,7 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
 
     public void setKey(int key) {
         this.key = key;
-        this.keyLabel.setText(KeyEvent.getKeyText(key));
+        this.keyLabel.setText(KeyEvent.getKeyText(key).toLowerCase());
     }
 
     private void timerFunction() {
@@ -75,22 +75,22 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
 
     private void setupKeyLabel() {
         keyLabel = ComponentCreator.createLabel("", 2, 30);
-        keyLabel.setBounds(110, 200, 200, 40);
+        keyLabel.setBounds(103, 200, 200, 40);
         keyLabel.setHorizontalAlignment(SwingConstants.CENTER);
         keyLabel.setOpaque(true);
         this.add(keyLabel);
     }
 
     private void setupAcceptButton() {
-        acceptButton = ComponentCreator.createButton("Accept", new Color(0xFFE3C755, true), 2, 16);
-        acceptButton.setBounds(245, 310, 70, 25);
+        acceptButton = new MenuButton("Accept", 16);
+        acceptButton.setBounds(238, 310, 70, 25);
         acceptButton.addActionListener(this);
         this.add(acceptButton);
     }
 
     private void setupCancelButton() {
-        cancelButton = ComponentCreator.createButton("Cancel", new Color(0xFFE3C755, true), 2, 16);
-        cancelButton.setBounds(105, 310, 70, 25);
+        cancelButton = new MenuButton("Cancel", 16);
+        cancelButton.setBounds(98, 310, 70, 25);
         cancelButton.addActionListener(this);
         this.add(cancelButton);
     }
@@ -101,22 +101,20 @@ public class ChangeControlPanel extends JPanel implements ActionListener {
     }
 
     @Override
-    public void paint(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        GamePainter.paintUnderFrame(g, getWidth(), getHeight(), 250, 250);
+        GamePainter.paintUnderFrame(g, getWidth(), getHeight(), 300, 300);
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(new Color(0xbbdadf));
         g2d.setFont(font);
         g2d.drawString(name, (getWidth() - width) / 2, 150);
 
-        g2d.setColor(new Color(255, 0, 0, opacity));
+        g2d.setColor(new Color(187, 218, 223, opacity));
         g2d.setFont(usedKeyFont);
         g2d.drawString(usedButtonText, (getWidth() - usedButtonWidth) / 2, 255);
-
-        super.paintChildren(g);
     }
 
     @Override

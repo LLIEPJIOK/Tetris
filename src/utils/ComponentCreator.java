@@ -7,40 +7,28 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ComponentCreator {
-    public static @NotNull JButton createButton(String text, Color color,
-                                                int borderThickness, int fontSize) {
+    public static @NotNull JButton createButton(String text, Color color, int borderThickness, int fontSize) {
         JButton button = new JButton(text);
-        Border border = new LineBorder(new Color(0, 0, 0), borderThickness, false);
+        Border border = new LineBorder(Color.BLACK, borderThickness, false);
         button.setBorder(border);
-        Font font = new Font("Arial", Font.BOLD, fontSize);
-        button.setFont(font);
+        button.setFont(ApplicationData.getFont(Font.BOLD, fontSize));
         button.setBackground(color);
-        button.setForeground(Color.BLACK);
+        button.setForeground(new Color(0x003495));
         button.setFocusPainted(false);
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (button.isEnabled()) {
-                    SoundPlayer.playHoverButtonMusic();
-                }
-            }
-        });
+        button.addMouseListener(new HoverButtonMouseAdapter(button));
         button.addActionListener(ApplicationData.getButtonClickPlayer());
         return button;
     }
 
     public static @NotNull JLabel createLabel(String text, int borderThickness, int fontSize) {
         JLabel label = new JLabel(text);
-        Border border = new LineBorder(new Color(0, 0, 0), borderThickness, false);
+        Border border = new LineBorder(Color.BLACK, borderThickness, false);
         label.setBorder(border);
-        Font font = new Font("Arial",  Font.PLAIN, fontSize);
-        label.setFont(font);
-        label.setBackground(new Color(255, 164, 60));
-        label.setForeground(new Color(0, 0, 0, 200));
+        label.setFont(ApplicationData.getFont(Font.BOLD, fontSize));
+        label.setBackground(new Color(0x00b3d4));
+        label.setForeground(new Color(0x003495));
         return label;
     }
 }

@@ -76,15 +76,14 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     private void setupScoreLabels() {
         JLabel scoreLabel = ComponentCreator.createLabel("Score", 0, 18);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
         scoreLabel.setBounds(293, 160, 100, 20);
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        scoreLabel.setForeground(new Color(255, 164, 60));
+        scoreLabel.setForeground(new Color(0xbbdadf));
 
         scoreNumberLabel = ComponentCreator.createLabel("0", 0, 18);
         scoreNumberLabel.setBounds(293, 184, 100, 20);
         scoreNumberLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        scoreNumberLabel.setForeground(new Color(255, 164, 60));
+        scoreNumberLabel.setForeground(new Color(0xbbdadf));
 
         this.add(scoreLabel);
         this.add(scoreNumberLabel);
@@ -92,15 +91,14 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
 
     private void setupLinesLabels() {
         JLabel linesLabel = ComponentCreator.createLabel("Lines", 0, 18);
-        linesLabel.setFont(new Font("Arial", Font.BOLD, 18));
         linesLabel.setBounds(293, 250, 100, 20);
         linesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        linesLabel.setForeground(new Color(255, 164, 60));
+        linesLabel.setForeground(new Color(0xbbdadf));
 
         linesNumberLabel = ComponentCreator.createLabel("0", 0, 18);
         linesNumberLabel.setBounds(293, 274, 100, 20);
         linesNumberLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        linesNumberLabel.setForeground(new Color(255, 164, 60));
+        linesNumberLabel.setForeground(new Color(0xbbdadf));
 
         this.add(linesLabel);
         this.add(linesNumberLabel);
@@ -233,10 +231,7 @@ public class PlayArea extends JPanel implements KeyListener, ActionListener {
                 actionListeners.forEach(actionListener -> actionListener.actionPerformed(e));
                 handleKeys = false;
             }
-            case "resume game" -> {
-                pauseButton.setEnabled(true);
-                pauseButton.doClick();
-            }
+            case "resume game" -> resumeGame();
             case "repaint" -> repaint();
             case "end game" -> {
                 pauseButton.setEnabled(false);

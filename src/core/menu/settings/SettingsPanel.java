@@ -1,8 +1,9 @@
 package core.menu.settings;
 
 import config.ApplicationData;
+import core.menu.BackButton;
+import core.menu.MenuButton;
 import org.jetbrains.annotations.NotNull;
-import utils.ComponentCreator;
 import utils.GamePainter;
 import utils.SoundPlayer;
 
@@ -14,17 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsPanel extends JPanel implements ActionListener {
-    private JButton soundButton;
-    private JButton controlsButton;
-    private JButton backButton;
-    private final Color buttonColor;
+    private MenuButton soundButton;
+    private MenuButton controlsButton;
+    private BackButton backButton;
     private final List<ActionListener> actionListeners;
 
     {
         setDoubleBuffered(true);
         setLayout(null);
 
-        buttonColor = new Color(0xFFE3C755, true);
         actionListeners = new ArrayList<>();
 
         setupSoundButton();
@@ -37,7 +36,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
     }
 
     private void setupSoundButton() {
-        soundButton = ComponentCreator.createButton("Sound", buttonColor, 4, 26);
+        soundButton = new MenuButton("Sound", 26);
         soundButton.setBounds(128, 163, 150, 50);
         soundButton.setPreferredSize(new Dimension(150, 50));
         soundButton.addActionListener(this);
@@ -45,15 +44,15 @@ public class SettingsPanel extends JPanel implements ActionListener {
     }
 
     private void setupControlsButton() {
-        controlsButton = ComponentCreator.createButton("Controls", buttonColor, 4, 26);
+        controlsButton = new MenuButton("Controls", 26);
         controlsButton.setBounds(128, 243, 150, 50);
         controlsButton.addActionListener(this);
         this.add(controlsButton);
     }
 
     private void setupBackButton() {
-        backButton = ComponentCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
-        backButton.setBounds(10, 430, 55, 25);
+        backButton = new BackButton();
+        backButton.setLocation(10, 430);
         backButton.addActionListener(this);
         backButton.removeActionListener(ApplicationData.getButtonClickPlayer());
         this.add(backButton);
@@ -63,7 +62,7 @@ public class SettingsPanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
-        GamePainter.paintTextWithShadow(g, 40, "Settings", new Color(206, 27, 92), new Color(82, 13, 48), 50);
+        GamePainter.paintTextWithShadow(g, 40, "Settings", new Color(0xbbdadf), new Color(0x00b3d4), 50);
     }
 
 

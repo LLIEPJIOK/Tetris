@@ -28,7 +28,7 @@ public class ControlsItem extends JComponent implements ActionListener {
     }
 
     public ControlsItem(String name, int key) {
-        label = ComponentCreator.createLabel(name, 0, 16);
+        label = ComponentCreator.createLabel(name, 0, 18);
         label.setOpaque(true);
         label.setPreferredSize(new Dimension(50, 20));
         label.setBounds(0, 0, 130, 25);
@@ -36,7 +36,7 @@ public class ControlsItem extends JComponent implements ActionListener {
 
         this.key = key;
 
-        button = ComponentCreator.createButton(KeyEvent.getKeyText(key), new Color(0xFFE3C755, true), 2, 16);
+        button = ComponentCreator.createButton(KeyEvent.getKeyText(key).toLowerCase(), new Color(0xbbdadf), 2, 18);
         button.setPreferredSize(new Dimension(50, 20));
         button.setBounds(150, 0, 100, 25);
         button.addActionListener(this);
@@ -55,7 +55,7 @@ public class ControlsItem extends JComponent implements ActionListener {
 
     public void setKey(int key) {
         this.key = key;
-        button.setText(KeyEvent.getKeyText(key));
+        button.setText(KeyEvent.getKeyText(key).toLowerCase());
     }
 
     @Override

@@ -1,9 +1,8 @@
 package core.game.pause;
 
+import core.menu.MenuButton;
 import org.jetbrains.annotations.NotNull;
-import config.ApplicationData;
 import utils.GamePainter;
-import utils.ComponentCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,27 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PausePanel extends JPanel implements ActionListener {
-    private final JButton resumeButton;
-    private final JButton settingsButton;
-    private final JButton menuButton;
+    private final MenuButton resumeButton;
+    private final MenuButton settingsButton;
+    private final MenuButton menuButton;
     private final List<ActionListener> actionListeners;
 
     {
-        setSize(ApplicationData.getApplicationDimension());
+        setSize(407, 464);
         setLayout(null);
         setOpaque(false);
         setFocusable(false);
 
-        resumeButton = ComponentCreator.createButton("Resume", new Color(0xFFE3C755, true), 2, 30);
-        resumeButton.setBounds(115, 130, 190, 50);
+        resumeButton = new MenuButton("Resume", 26);
+        resumeButton.setBounds(128, 130, 150, 50);
         resumeButton.addActionListener(this);
 
-        settingsButton = ComponentCreator.createButton("Settings", new Color(0xFFE3C755, true), 2, 30);
-        settingsButton.setBounds(115, 205, 190, 50);
+        settingsButton = new MenuButton("Settings", 26);
+        settingsButton.setBounds(128, 205, 150, 50);
         settingsButton.addActionListener(this);
 
-        menuButton = ComponentCreator.createButton("Menu", new Color(0xFFE3C755, true), 2, 30);
-        menuButton.setBounds(115, 285, 190, 50);
+        menuButton = new MenuButton("Menu", 26);
+        menuButton.setBounds(128, 285, 150, 50);
         menuButton.addActionListener(this);
 
         actionListeners = new ArrayList<>();
@@ -51,7 +50,7 @@ public class PausePanel extends JPanel implements ActionListener {
     public void paint(Graphics g) {
         super.paintComponent(g);
 
-        GamePainter.paintUnderFrame(g, getWidth(), getHeight(), 250, 250);
+        GamePainter.paintUnderFrame(g, getWidth(), getHeight(), 300, 300);
 
         super.paintChildren(g);
     }

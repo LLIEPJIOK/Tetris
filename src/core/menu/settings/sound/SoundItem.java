@@ -6,7 +6,6 @@ import utils.ComponentCreator;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 
 public class SoundItem extends JComponent implements ChangeListener {
     private JLabel volumeLabel;
@@ -14,7 +13,7 @@ public class SoundItem extends JComponent implements ChangeListener {
     private final SoundSetter soundSetter;
 
     {
-        setSize(330, 20);
+        setSize(340, 20);
     }
 
     public SoundItem(String text, int value, SoundSetter soundSetter) {
@@ -31,14 +30,14 @@ public class SoundItem extends JComponent implements ChangeListener {
     private void setupLabel(String text) {
         JLabel label = ComponentCreator.createLabel(text, 0, 16);
         label.setOpaque(true);
-        label.setBounds(0, 0, 55, 20);
+        label.setBounds(0, 0, 65, 20);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(label);
     }
 
     private void setupVolumeLabel() {
         volumeLabel = ComponentCreator.createLabel("", 0, 16);
-        volumeLabel.setBounds(295, 0, 35, 20);
+        volumeLabel.setBounds(305, 0, 35, 20);
         volumeLabel.setOpaque(true);
         volumeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(volumeLabel);
@@ -46,7 +45,7 @@ public class SoundItem extends JComponent implements ChangeListener {
 
     public void setupSlider(int value) {
         slider = new Slider();
-        slider.setLocation(75, 0);
+        slider.setLocation(85, 0);
         slider.addChangeListener(this);
         slider.setValue(value);
         this.add(slider);

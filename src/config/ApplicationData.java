@@ -3,6 +3,8 @@ package config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.game.Field;
 import core.game.PlayArea;
+import core.menu.BackButton;
+import core.menu.MenuButton;
 import utils.ButtonClickPlayer;
 import lombok.Getter;
 import utils.GamePainter;
@@ -30,13 +32,11 @@ public class ApplicationData {
     private static int fieldWidth;
     @Getter
     private static int fieldHeight;
+    private static Font font;
     @Getter
     private static ButtonClickPlayer buttonClickPlayer;
     @Getter
     private static List<Integer> records;
-
-    static {
-    }
 
     public static int getMenuVolume() {
         return savableData.getMenuVolume();
@@ -56,6 +56,10 @@ public class ApplicationData {
 
     public static HashMap<String, Integer> getCommandsKeys() {
         return savableData.getCommandsKeys();
+    }
+
+    public static Font getFont(int style, float size) {
+        return font.deriveFont(style, size);
     }
 
     public static void setMenuVolume(int volume) {
@@ -102,6 +106,12 @@ public class ApplicationData {
         fieldHeight = 20;
         buttonClickPlayer = new ButtonClickPlayer();
         records = savableData.getRecords();
+        try {
+            File fontFile = new File("res/fonts/font.ttf");
+            font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+        } catch (IOException | FontFormatException e) {
+            throw new RuntimeException(e);
+        }
 
         UIManager.getDefaults().put("Button.disabledText", Color.BLACK);
 
@@ -109,6 +119,8 @@ public class ApplicationData {
         GamePainter.load();
         PlayArea.load();
         Field.load();
+        MenuButton.load();
+        BackButton.load();
     }
 
     private static void load() {

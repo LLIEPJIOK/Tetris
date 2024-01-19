@@ -6,8 +6,8 @@ import java.awt.*;
 public class Slider extends JSlider {
     {
         setOpaque(false);
-        setBackground(new Color(180, 180, 180));
-        setForeground(new Color(0xFFE3C755, true));
+        setBackground(new Color(0xbbdadf));
+        setForeground(new Color(0x003495));
         setUI(new SliderUI(this));
         setSize(200, 20);
     }

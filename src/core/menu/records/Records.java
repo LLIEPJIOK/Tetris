@@ -1,8 +1,8 @@
 package core.menu.records;
 
+import core.menu.BackButton;
 import org.jetbrains.annotations.NotNull;
 import config.ApplicationData;
-import utils.ComponentCreator;
 import utils.GamePainter;
 import utils.SoundPlayer;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Records extends JPanel implements ActionListener {
-    private JButton backButton;
+    private BackButton backButton;
     private final List<RecordsItem> recordsItems;
     private final List<Integer> records;
     private final List<ActionListener> actionListeners;
@@ -42,8 +42,8 @@ public class Records extends JPanel implements ActionListener {
     }
 
     private void setupBackButton() {
-        backButton = ComponentCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
-        backButton.setBounds(10, 430, 55, 25);
+        backButton = new BackButton();
+        backButton.setLocation(10, 430);
         backButton.addActionListener(this);
         backButton.removeActionListener(ApplicationData.getButtonClickPlayer());
         this.add(backButton);
@@ -104,12 +104,12 @@ public class Records extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
-        GamePainter.paintTextWithShadow(g, 40, "Records", new Color(206, 27, 92), new Color(82, 13, 48), 50);
+        GamePainter.paintTextWithShadow(g, 40, "Records", new Color(0xbbdadf), new Color(0x00b3d4), 50);
         for (RecordsItem recordsItem : recordsItems) {
             recordsItem.paint(g);
         }
         if (recordsItems.isEmpty()) {
-            GamePainter.paintTextWithShadow(g, 215, "No records", new Color(0x99FCFC), new Color(0x247373), 35);
+            GamePainter.paintTextWithShadow(g, 215, "No records", new Color(0x00b3d4), new Color(0x003495), 35);
         }
     }
 

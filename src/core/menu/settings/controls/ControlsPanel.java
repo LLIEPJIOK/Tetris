@@ -1,8 +1,8 @@
 package core.menu.settings.controls;
 
 import config.ApplicationData;
+import core.menu.BackButton;
 import org.jetbrains.annotations.NotNull;
-import utils.ComponentCreator;
 import utils.GamePainter;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ControlsPanel extends JPanel implements ActionListener {
     private final String[] itemNames;
-    private JButton backButton;
+    private BackButton backButton;
     private final HashMap<String, Integer> commandsKeys;
     private final List<ActionListener> actionListeners;
 
@@ -48,8 +48,8 @@ public class ControlsPanel extends JPanel implements ActionListener {
     }
 
     private void setupBackButton() {
-        backButton = ComponentCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
-        backButton.setBounds(10, 430, 55, 25);
+        backButton = new BackButton();
+        backButton.setLocation(10, 430);
         backButton.addActionListener(this);
         backButton.removeActionListener(ApplicationData.getButtonClickPlayer());
         this.add(backButton);
@@ -59,7 +59,7 @@ public class ControlsPanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
-        GamePainter.paintTextWithShadow(g, 40, "Controls", new Color(206, 27, 92), new Color(82, 13, 48), 50);
+        GamePainter.paintTextWithShadow(g, 40, "Controls", new Color(0xbbdadf), new Color(0x00b3d4), 50);
     }
 
     @Override

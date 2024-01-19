@@ -1,8 +1,8 @@
 package core.menu.settings.sound;
 
+import core.menu.BackButton;
 import org.jetbrains.annotations.NotNull;
 import config.ApplicationData;
-import utils.ComponentCreator;
 import utils.GamePainter;
 import utils.SoundPlayer;
 
@@ -17,7 +17,7 @@ public class SoundPanel extends JPanel implements ActionListener {
     private SoundItem menuSound;
     private SoundItem gameSound;
     private SoundItem effectsSound;
-    private JButton backButton;
+    private BackButton backButton;
     private final List<ActionListener> actionListeners;
 
     {
@@ -38,25 +38,25 @@ public class SoundPanel extends JPanel implements ActionListener {
 
     private void setupMenuSound() {
         menuSound = new SoundItem("Menu", ApplicationData.getMenuVolume(), SoundPlayer::setMenuVolume);
-        menuSound.setLocation(38, 175);
+        menuSound.setLocation(33, 175);
         this.add(menuSound);
     }
 
     private void setupGameSound() {
         gameSound = new SoundItem("Game", ApplicationData.getGameVolume(), SoundPlayer::setGameVolume);
-        gameSound.setLocation(38, 225);
+        gameSound.setLocation(33, 225);
         this.add(gameSound);
     }
 
     private void setupEffectsSound() {
         effectsSound = new SoundItem("Effects", ApplicationData.getEffectsVolume(), SoundPlayer::setEffectsVolume);
-        effectsSound.setLocation(38, 275);
+        effectsSound.setLocation(33, 275);
         this.add(effectsSound);
     }
 
     private void setupBackButton() {
-        backButton = ComponentCreator.createButton("Back", new Color(0xFFE3C755, true), 2, 16);
-        backButton.setBounds(10, 430, 55, 25);
+        backButton = new BackButton();
+        backButton.setLocation(10, 430);
         backButton.addActionListener(this);
         backButton.removeActionListener(ApplicationData.getButtonClickPlayer());
         this.add(backButton);
@@ -66,7 +66,7 @@ public class SoundPanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         GamePainter.paintMenuBackground(g, getWidth(), getHeight(), this);
-        GamePainter.paintTextWithShadow(g, 40, "Sound", new Color(206, 27, 92), new Color(82, 13, 48), 50);
+        GamePainter.paintTextWithShadow(g, 40, "Sound", new Color(0xbbdadf), new Color(0x00b3d4), 50);
     }
 
     @Override

@@ -92,8 +92,8 @@ public class RecordsItem {
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(new Font("Arial", Font.PLAIN, 16));
-        g2d.setColor(new Color(255, 255, 255, scoreOpacity));
+        g2d.setFont(ApplicationData.getFont(Font.BOLD, 16));
+        g2d.setColor(new Color(187, 218, 223, scoreOpacity));
         g2d.drawString(String.valueOf(score), scoreX, neededY + 15);
     }
 }
